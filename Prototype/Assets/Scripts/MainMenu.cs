@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuScript : MonoBehaviour {
-	void Start() {
-		
-	}
+public class MainMenu : MonoBehaviour {
+    void Start() {
 
-	void Update() {
-		
-	}
+    }
 
-	public void StartGame() {   
-		Application.LoadLevel("Moving Platform Level");
-	}
+    void Update() {
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+            print("Yo");
+        }
+    }
 
-	public void Quit() {
-		Application.Quit();
-	}
+    public void StartGame() {
+        Application.LoadLevel("Moving Platform Level");
+    }
+
+    public void Quit() {
+        Application.Quit();
+    }
+
+    
 }
