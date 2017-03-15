@@ -33,4 +33,10 @@ public class GameManager : MonoBehaviour {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
 	}
 
+    public void ExitToMenu()
+    {
+        SceneManager.LoadScene("Menu");
+        Time.timeScale = 1.0f;
+    }
+
 }
