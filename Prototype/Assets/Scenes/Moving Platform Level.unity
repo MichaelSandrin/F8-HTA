@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -7413,6 +7413,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114196953649482708, guid: 4897dab8675bec349aefa005de49a2e8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4379858000100010, guid: 4897dab8675bec349aefa005de49a2e8, type: 2}
       propertyPath: m_LocalPosition.x
       value: 97.79747
@@ -7450,9 +7455,40 @@ Prefab:
       propertyPath: m_Color.a
       value: 0.223
       objectReference: {fileID: 0}
+    - target: {fileID: 114196953649482708, guid: 4897dab8675bec349aefa005de49a2e8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114196953649482708, guid: 4897dab8675bec349aefa005de49a2e8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114196953649482708, guid: 4897dab8675bec349aefa005de49a2e8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 736579917}
+    - target: {fileID: 114196953649482708, guid: 4897dab8675bec349aefa005de49a2e8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitToMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 114196953649482708, guid: 4897dab8675bec349aefa005de49a2e8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4897dab8675bec349aefa005de49a2e8, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &736579917 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114484971297846196, guid: 4897dab8675bec349aefa005de49a2e8,
+    type: 2}
+  m_PrefabInternal: {fileID: 736579916}
+  m_Script: {fileID: 11500000, guid: ad0c85f97cef89b4b85835f98a49fe75, type: 3}
 --- !u!1 &739649807
 GameObject:
   m_ObjectHideFlags: 0
@@ -22105,6 +22141,34 @@ Prefab:
     - target: {fileID: 100000, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100008, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100012, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ea5546d2c36d12f40a54dd4da6453e60, type: 3}
