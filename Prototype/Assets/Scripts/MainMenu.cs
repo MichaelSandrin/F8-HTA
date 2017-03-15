@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuScript : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+	void Start() {
 		
 	}
 
-    public void StartGame()
-    {   
-        Application.LoadLevel("Moving Platform Level");
-    }
+	void Update() {
+		
+	}
 
-    public void Quit()
-    {
-        Application.Quit();
-    }
+	public void StartGame() {   
+		Application.LoadLevel("Moving Platform Level");
+	}
+
+	public void Quit() {
+		Application.Quit();
+	}
 }

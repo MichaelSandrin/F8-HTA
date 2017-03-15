@@ -2,35 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour
-{
-    // Character
-    public CharacterController player;
-    // Needs "Plume" assigned in inspector.
-    private Transform playerTransform;
+public class CameraMovement : MonoBehaviour {
+	// Character
+	public CharacterController player;
+	// Needs "Plume" assigned in inspector.
+	private Transform playerTransform;
 
-    // Camera
-    public Camera playerCamera;
-    // Needs "Main Camera" assigned in inspector.
-    private Transform cameraTransform;
+	// Camera
+	public Camera playerCamera;
+	// Needs "Main Camera" assigned in inspector.
+	private Transform cameraTransform;
 
-    // Input
-    public float inputX = 0f;
-    public float inputY = 0f;
+	// Input
+	public float inputX = 0f;
+	public float inputY = 0f;
 
-    // Angle Constraints
-    public const float Y_ANGLE_MIN = -44.9f;
-    //-44.9 keeps the camera from flipping over the vertical axis.
-    public const float Y_ANGLE_MAX = 50f;
+	// Angle Constraints
+	public const float Y_ANGLE_MIN = -44.9f;
+	//-44.9 keeps the camera from flipping over the vertical axis.
+	public const float Y_ANGLE_MAX = 50f;
 
-    // Camera Placement
-    public float startingHeight = 0f;
-    // This influences the clamp angles.
-    public float distance = 8f;
+	// Camera Placement
+	public float startingHeight = 0f;
+	// This influences the clamp angles.
+	public float distance = 8f;
 
 
-    // Redundant Code
-    /*
+	// Redundant Code
+	/*
 	public Transform player;
 	public float cameraSpeed = 15;
 	public float zoomSpeed = 20;
@@ -46,37 +45,35 @@ public class CameraMovement : MonoBehaviour
 	float RStickY;
 	*/
 
-    void Start()
-    {
-        // Character
-        playerTransform = player.transform; // Despite being in Start(), characterTransform stays updated with the character's current transform values. Works, but don't know how.
+	void Start() {
+		// Character
+		playerTransform = player.transform; // Despite being in Start(), characterTransform stays updated with the character's current transform values. Works, but don't know how.
 
-        // Camera
-        cameraTransform = playerCamera.transform;
+		// Camera
+		cameraTransform = playerCamera.transform;
 
-        //PlayerCamera = GetComponent<Camera>();
-    }
+		//PlayerCamera = GetComponent<Camera>();
+	}
 
-    void Update()
-    {
-        // Mouse Input
-        inputX += Input.GetAxis("Mouse X");
-        inputY += Input.GetAxis("Mouse Y");
+	void Update() {
+		// Mouse Input
+		inputX += Input.GetAxis("Mouse X");
+		inputY += Input.GetAxis("Mouse Y");
 
-        // Controller Input
-        inputX += Input.GetAxis("X360_RStickX") * 2;
-        inputY += -Input.GetAxis("X360_RStickY") * 2;
+		// Controller Input
+		inputX += Input.GetAxis("X360_RStickX") * 2;
+		inputY += -Input.GetAxis("X360_RStickY") * 2;
 
-        // Angle Limiter
-        inputY = Mathf.Clamp(inputY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+		// Angle Limiter
+		inputY = Mathf.Clamp(inputY, Y_ANGLE_MIN, Y_ANGLE_MAX);
 
-        // Redundant Code
-        /*
+		// Redundant Code
+		/*
 		RStickX = Input.GetAxis("X360_RStickX");
 		RStickY = Input.GetAxis("X360_RStickY");
 		*/
 
-        /*
+		/*
 		Vector3 nextDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
 		if (nextDirection != Vector3.zero) {
@@ -84,7 +81,7 @@ public class CameraMovement : MonoBehaviour
 		}
 		*/
 
-        /*
+		/*
         if (player) {
             //Vector3 newPos = transform.position;
             Vector3 newPos = mousePos;
@@ -103,27 +100,26 @@ public class CameraMovement : MonoBehaviour
                 transform.position = Vector3.Lerp(transform.position, newPos, cameraSpeed * Time.deltaTime);
             }
         }*/
-    }
+	}
 
-    void LateUpdate()
-    {
-        // Default camera distance and height.
-        Vector3 direction = new Vector3(0, startingHeight, distance); // This needs to be in LateUpdate() for some reason. Works, don't know how.
+	void LateUpdate() {
+		// Default camera distance and height.
+		Vector3 direction = new Vector3(0, startingHeight, distance); // This needs to be in LateUpdate() for some reason. Works, don't know how.
 
-        // Convert input into a quaternion rotation.
-        Quaternion rotation = Quaternion.Euler(inputY, inputX, 0); // "Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order)."
+		// Convert input into a quaternion rotation.
+		Quaternion rotation = Quaternion.Euler(inputY, inputX, 0); // "Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order)."
 
-        // Sets camera position using charactetr postion + rotated vector.
-        cameraTransform.position = playerTransform.position + (rotation * direction); // Multiplying Quaternion rotation by Vector3 direction effectively rotates the vector
+		// Sets camera position using charactetr postion + rotated vector.
+		cameraTransform.position = playerTransform.position + (rotation * direction); // Multiplying Quaternion rotation by Vector3 direction effectively rotates the vector
 
-        // Sets the camera to look at the player's position.
-        cameraTransform.LookAt(playerTransform.position);
+		// Sets the camera to look at the player's position.
+		cameraTransform.LookAt(playerTransform.position);
 
-        // Where is cameraTransform ever applied to the actual main camera?
-    }
+		// Where is cameraTransform ever applied to the actual main camera?
+	}
 
-    // Redundant Code
-    /*
+	// Redundant Code
+	/*
     void CameraZoom() {
         playerCamera.fieldOfView -= zoomSpeed / 4;
 
