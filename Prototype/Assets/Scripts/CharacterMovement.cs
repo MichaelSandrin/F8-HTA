@@ -13,7 +13,6 @@ public class CharacterMovement : MonoBehaviour
 	// on the other hand vertical velocity is being checked against the player (will zero out when grounded)
 	// checking vertical velocity is dangerous because if the player jumps up a step they will be launched into the air
 	// Glide really needs to be based on vertical velocity or else it barely works at high speeds
-	// Character always returns to face forward
 	// Make deceleration faster than acceleration
 	// Motion sometimes locks out if swapping direction keys exactly as the other is realeased
 
@@ -41,15 +40,11 @@ public class CharacterMovement : MonoBehaviour
 	private float lrVelocity = 0f;
 	Vector3 relativeVelocity = new Vector3 (0, 0, 0);
 
-	private float forwardVelocity = 0f;
-	private float backwardVelocity = 0f;
-	private float rightVelocity = 0f;
-	private float leftVelocity = 0f;
-
 	private float acceleration = 2f;
 	private float deceleration = 1f;
 
-	public float maxSpeedOriginal = 8f;
+	public float maxSpeedOriginal = 6f;
+	// 4x Character Height [Final]
 	public float maxSpeed = 0f;
 	private float maxSpeedOuter = 0f;
 	private float maxSpeedInner = 0f;
@@ -164,12 +159,16 @@ public class CharacterMovement : MonoBehaviour
 	void RenderModel ()
 	{
 		// Turn the character with smoothing. Lerp(fromLocation, toLocation, time * turnSpeed);
-		//transform.rotation = Quaternion.Lerp(transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w), Quaternion.LookRotation(player.velocity), Time.deltaTime * characterRotateSpeed);
+		if (GetFlatVelocity ().magnitude != 0) {
+			transform.rotation = Quaternion.Lerp (transform.rotation = new Quaternion (0, transform.rotation.y, 0, transform.rotation.w), Quaternion.LookRotation (GetFlatVelocity ()), Time.deltaTime * characterRotateSpeed);
+		}
 	}
 
 	// Called once per physics calculation (fixed timeline). Is called just before physics (rigidbody) are updated. Should be used for physics calculations.
 	void FixedUpdate ()
 	{
+
+
 		// Movement
 		Walk ();
 		Jump ();
@@ -216,12 +215,17 @@ public class CharacterMovement : MonoBehaviour
 		return temp;
 	}
 
+	Vector3 GetFlatVelocity ()
+	{
+		Vector3 temp = player.velocity;
+		temp.y = 0;
+		return temp;
+	}
+
 	void Walk ()
 	{
 		// Get the player velocity and convert it to a velocity relative to the camera.
-
-		relativeVelocity = player.velocity;
-		relativeVelocity.y = 0;
+		relativeVelocity = GetFlatVelocity ();
 		relativeVelocity = Quaternion.Euler (0, shortestAngleBetween (cameraDirection, Vector3.forward) * Mathf.Rad2Deg, 0) * relativeVelocity; // Quaternions must be on the left side of a '*' operation for calculus reasons.
 
 		// Apply Deceleration
@@ -254,6 +258,7 @@ public class CharacterMovement : MonoBehaviour
 
 		// Apply Acceleration
 		if (relativeVelocity.magnitude > maxSpeedInner) { // If the new speed has any possibility of being over the maxSpeed:
+			print (combinedLateralInput.x + "L");
 			Vector3 excess = relativeVelocity - ChangeMagnitude (relativeVelocity, maxSpeedOuter); // Calculate any pre-existing velocity over the maxSpeed.
 			Vector3 temp = ChangeMagnitude (relativeVelocity, maxSpeedOuter) + excess; // Save it.
 			if (temp.magnitude < maxSpeedOuter) { // If it is negative speed (derived from speeds above maxSpeedInner but below maxSpeedOuter, negate it.
@@ -263,7 +268,9 @@ public class CharacterMovement : MonoBehaviour
 			relativeVelocity -= excess; // Remove the excess velocity the current velocity.
 
 			relativeVelocity += new Vector3 (acceleration * combinedLateralInput.x, 0, acceleration * combinedLateralInput.z); // Add new acceleration.
-			relativeVelocity = ChangeMagnitude (relativeVelocity, maxSpeedOuter); // Chop off excess acceleration but maintain the new direction.
+			if (relativeVelocity.magnitude > maxSpeedOuter) { // If the new added velocity is actually greater than the maxSpeedOuter:
+				relativeVelocity = ChangeMagnitude (relativeVelocity, maxSpeedOuter); // Chop off excess acceleration but maintain the new direction.
+			}
 
 			relativeVelocity += excess; // Add back the excess.
 
@@ -273,6 +280,7 @@ public class CharacterMovement : MonoBehaviour
 		} else {
 			relativeVelocity += new Vector3 (acceleration * combinedLateralInput.x, 0, acceleration * combinedLateralInput.z); // If not, simply add the input acceleration.
 		}
+
 
 		// Redundant Code
 		// Velocity Clamp // Not actually needed, we want to maintain momentum from pushers too

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour {
+public class CameraMovement : MonoBehaviour
+{
 	// Character
 	public CharacterController player;
 	// Needs "Plume" assigned in inspector.
@@ -25,7 +26,7 @@ public class CameraMovement : MonoBehaviour {
 	// Camera Placement
 	public float startingHeight = 0f;
 	// This influences the clamp angles.
-	public float distance = 8f;
+	public float distance = 4f;
 
 
 	// Redundant Code
@@ -45,7 +46,8 @@ public class CameraMovement : MonoBehaviour {
 	float RStickY;
 	*/
 
-	void Start() {
+	void Start ()
+	{
 		// Character
 		playerTransform = player.transform; // Despite being in Start(), characterTransform stays updated with the character's current transform values. Works, but don't know how.
 
@@ -55,17 +57,18 @@ public class CameraMovement : MonoBehaviour {
 		//PlayerCamera = GetComponent<Camera>();
 	}
 
-	void Update() {
+	void Update ()
+	{
 		// Mouse Input
-		inputX += Input.GetAxis("Mouse X");
-		inputY += Input.GetAxis("Mouse Y");
+		inputX += Input.GetAxis ("Mouse X");
+		inputY += Input.GetAxis ("Mouse Y");
 
 		// Controller Input
-		inputX += Input.GetAxis("X360_RStickX") * 2;
-		inputY += -Input.GetAxis("X360_RStickY") * 2;
+		inputX += Input.GetAxis ("X360_RStickX") * 2;
+		inputY += -Input.GetAxis ("X360_RStickY") * 2;
 
 		// Angle Limiter
-		inputY = Mathf.Clamp(inputY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+		inputY = Mathf.Clamp (inputY, Y_ANGLE_MIN, Y_ANGLE_MAX);
 
 		// Redundant Code
 		/*
@@ -102,18 +105,19 @@ public class CameraMovement : MonoBehaviour {
         }*/
 	}
 
-	void LateUpdate() {
+	void LateUpdate ()
+	{
 		// Default camera distance and height.
-		Vector3 direction = new Vector3(0, startingHeight, distance); // This needs to be in LateUpdate() for some reason. Works, don't know how.
+		Vector3 direction = new Vector3 (0, startingHeight, distance); // This needs to be in LateUpdate() for some reason. Works, don't know how.
 
 		// Convert input into a quaternion rotation.
-		Quaternion rotation = Quaternion.Euler(inputY, inputX, 0); // "Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order)."
+		Quaternion rotation = Quaternion.Euler (inputY, inputX, 0); // "Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order)."
 
 		// Sets camera position using charactetr postion + rotated vector.
 		cameraTransform.position = playerTransform.position + (rotation * direction); // Multiplying Quaternion rotation by Vector3 direction effectively rotates the vector
 
 		// Sets the camera to look at the player's position.
-		cameraTransform.LookAt(playerTransform.position);
+		cameraTransform.LookAt (playerTransform.position);
 
 		// Where is cameraTransform ever applied to the actual main camera?
 	}
