@@ -30,6 +30,6 @@ public class GlowWing : MonoBehaviour {
     void OnGUI()
     {
         string glideTime = glideColor.ToString();
-        GUI.Label(new Rect(0, 0, 100, 50), glideTime);
+        //GUI.Label(new Rect(0, 0, 100, 50), glideTime);
     }
 }
