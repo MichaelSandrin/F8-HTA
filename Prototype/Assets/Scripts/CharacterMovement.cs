@@ -15,7 +15,7 @@ public class CharacterMovement : MonoBehaviour
 	// Glide really needs to be based on vertical velocity or else it barely works at high speeds
 	// Make deceleration faster than acceleration
 	// Motion sometimes locks out if swapping direction keys exactly as the other is realeased
-
+	// Maybe slow speed when landing after a jump?
 
 	// Game
 	public Vector3 respawnPoint;
@@ -40,17 +40,21 @@ public class CharacterMovement : MonoBehaviour
 	private float lrVelocity = 0f;
 	Vector3 relativeVelocity = new Vector3 (0, 0, 0);
 
-	private float acceleration = 2f;
-	private float deceleration = 1f;
+	private float acceleration = 1.5f;
+	// [.25x Max Speed]
+	private float deceleration = .75f;
+	// [.5x Acceleration]
 
 	public float maxSpeedOriginal = 6f;
-	// 4x Character Height [Final]
+	// [4x Character Height]
 	public float maxSpeed = 0f;
 	private float maxSpeedOuter = 0f;
 	private float maxSpeedInner = 0f;
 
 	// Vertical Movement
-	public float jumpSpeed = 6f;
+	public float jumpSpeed = 3.3f;
+	// [~2x Acceleration]
+	// Max comfortable jump distance maps ~ 1:1 to jumpSpeed
 
 	// Jump
 	public bool onGround;
