@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterMovement : MonoBehaviour {
+public class CharacterMovement : MonoBehaviour
+{
 	// ***Important***
 	// Variables initialized outside of Start() will we editable through the editor but will not reset when Unity is restarted.
 	// To return variables to their initialized values stated inside the script, in the editor hit the gear icon and select 'reset'.
@@ -26,16 +27,19 @@ public class CharacterMovement : MonoBehaviour {
 	// Camera
 	public Camera playerCamera;
 	// Needs "Main Camera" Attached
+	public Transform ChController;
+	// Needs "Plume" (character transfrom) attached to this
+
 	Vector3 cameraDirection;
 
 	// Input
-	Vector3 keyboardLateralInput = new Vector3(0, 0, 0);
-	Vector3 controllerLateralInput = new Vector3(0, 0, 0);
-	Vector3 combinedLateralInput = new Vector3(0, 0, 0);
+	Vector3 keyboardLateralInput = new Vector3 (0, 0, 0);
+	Vector3 controllerLateralInput = new Vector3 (0, 0, 0);
+	Vector3 combinedLateralInput = new Vector3 (0, 0, 0);
 
 	private float fbVelocity = 0f;
 	private float lrVelocity = 0f;
-	Vector3 relativeVelocity = new Vector3(0, 0, 0);
+	Vector3 relativeVelocity = new Vector3 (0, 0, 0);
 
 	private float forwardVelocity = 0f;
 	private float backwardVelocity = 0f;
@@ -81,10 +85,6 @@ public class CharacterMovement : MonoBehaviour {
 	// Push
 	public float pushPower = 5.0f;
 
-
-	public Transform ChController;
-	// What is this? Where is it's value set?
-
 	// Rendering
 	public Material[] material;
 	// What is this?
@@ -104,13 +104,14 @@ public class CharacterMovement : MonoBehaviour {
     }
    	*/
 
-	void Start() {
+	void Start ()
+	{
 		// Game
-		respawnPoint = GameObject.Find("SpawnPoint").transform.position;
+		respawnPoint = GameObject.Find ("SpawnPoint").transform.position;
 
 		// Character
-		player = GetComponent<CharacterController>();
-		rend = GetComponent<Renderer>();
+		player = GetComponent<CharacterController> ();
+		rend = GetComponent<Renderer> ();
 		rend.enabled = true;
 
 		//material[0] = new Color(255, 108, 106, 1);
@@ -118,10 +119,11 @@ public class CharacterMovement : MonoBehaviour {
 		//Physics.gravity = new Vector3(0, -100F, 0);
 	}
 
-	void Update() {
-		CalculateCameraDirection();
-		PlayerInput();
-		RenderModel();
+	void Update ()
+	{
+		CalculateCameraDirection ();
+		PlayerInput ();
+		RenderModel ();
 
 		// Redundant Code
 		/*
@@ -132,47 +134,51 @@ public class CharacterMovement : MonoBehaviour {
 		*/
 	}
 
-	void CalculateCameraDirection() {
+	void CalculateCameraDirection ()
+	{
 		cameraDirection = playerCamera.transform.forward; // Takes the z axis from the camera.transform.
 		cameraDirection.y = 0; // Ignores the y component.
-		cameraDirection.Normalize(); // Creates a unit vector which wont be a super small value when the camera is looking down.
+		cameraDirection.Normalize (); // Creates a unit vector which wont be a super small value when the camera is looking down.
 	}
 
-	void PlayerInput() {
+	void PlayerInput ()
+	{
 		// Get Discrete Circular Input for Lateral Acceleration
 		// Convert square vector to circular vector.
-		keyboardLateralInput = Vector3.Normalize(new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"))); // Keyboard axis are (right, up) positive, Square // We have our own acceleration and dont need keyboard input acceleration
+		keyboardLateralInput = Vector3.Normalize (new Vector3 (Input.GetAxisRaw ("Horizontal"), 0, Input.GetAxisRaw ("Vertical"))); // Keyboard axis are (right, up) positive, Square // We have our own acceleration and dont need keyboard input acceleration
 
 		// Convert square vector to circular vector.
-		controllerLateralInput = Vector3.Normalize(new Vector3(Input.GetAxis("X360_LStickX"), 0, -Input.GetAxis("X360_LStickY"))); // Joysticks are (right, down) positive, Square
+		controllerLateralInput = Vector3.Normalize (new Vector3 (Input.GetAxis ("X360_LStickX"), 0, -Input.GetAxis ("X360_LStickY"))); // Joysticks are (right, down) positive, Square
 
 		// Get Absolute Joystick Input Magnitude for maxSpeed multiplication.
 		// Convert the discrete circular vector to a continuous circular vector.
-		controllerLateralInput.x = controllerLateralInput.x * Mathf.Abs(Input.GetAxis("X360_LStickX")); // This is applying the ratio from 0 to 1 for fractional joystick inputs because normalize forces all vectors to be either 0 or 1 units long.
-		controllerLateralInput.z = controllerLateralInput.z * Mathf.Abs(Input.GetAxis("X360_LStickY"));
+		controllerLateralInput.x = controllerLateralInput.x * Mathf.Abs (Input.GetAxis ("X360_LStickX")); // This is applying the ratio from 0 to 1 for fractional joystick inputs because normalize forces all vectors to be either 0 or 1 units long.
+		controllerLateralInput.z = controllerLateralInput.z * Mathf.Abs (Input.GetAxis ("X360_LStickY"));
 
 		// Combine both keyboard and controller inputs (keyboard effectively overrides the controller for same directions (because it's discrete) but still feels influence in opposite directions).
 		combinedLateralInput = keyboardLateralInput + controllerLateralInput;
 		// Clamps the new vector length to 1 (max input length)
-		combinedLateralInput = Vector3.ClampMagnitude(combinedLateralInput, 1); // Clamps the vector length to 1 (don't need to worry about square vectors because both are already circular, this wont work for the controller in place of the normalize process because it wont properly convert the square ratios to circular ratios).  
+		combinedLateralInput = Vector3.ClampMagnitude (combinedLateralInput, 1); // Clamps the vector length to 1 (don't need to worry about square vectors because both are already circular, this wont work for the controller in place of the normalize process because it wont properly convert the square ratios to circular ratios).  
 	}
 
-	void RenderModel() {
+	void RenderModel ()
+	{
 		// Turn the character with smoothing. Lerp(fromLocation, toLocation, time * turnSpeed);
 		//transform.rotation = Quaternion.Lerp(transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w), Quaternion.LookRotation(player.velocity), Time.deltaTime * characterRotateSpeed);
 	}
 
 	// Called once per physics calculation (fixed timeline). Is called just before physics (rigidbody) are updated. Should be used for physics calculations.
-	void FixedUpdate() {
+	void FixedUpdate ()
+	{
 		// Movement
-		Walk();
-		Jump();
-		Glide2();
+		Walk ();
+		Jump ();
+		Glide2 ();
 
-		Climb();
-		Interaction();
+		Climb ();
+		Interaction ();
 
-		ApplyMotion(); // Must come after all movement updates.
+		ApplyMotion (); // Must come after all movement updates.
 
 		// Redundant Code
 		/*
@@ -180,39 +186,43 @@ public class CharacterMovement : MonoBehaviour {
 		*/
 	}
 
-	float shortestAngleBetween(Vector3 fromVector, Vector3 toVector) {
-		float angle = Mathf.Atan2(fromVector.z, fromVector.x) - Mathf.Atan2(toVector.z, toVector.x);
+	float shortestAngleBetween (Vector3 fromVector, Vector3 toVector)
+	{
+		float angle = Mathf.Atan2 (fromVector.z, fromVector.x) - Mathf.Atan2 (toVector.z, toVector.x);
 
-		float tempX = Mathf.Cos(angle);
-		float tempY = Mathf.Sin(angle);
+		float tempX = Mathf.Cos (angle);
+		float tempY = Mathf.Sin (angle);
 
-		angle = Mathf.Atan2(tempY, tempX);
+		angle = Mathf.Atan2 (tempY, tempX);
 
 		return (angle); // Returns an angle in radians
 	}
 
-	void ApplyMotion() {
+	void ApplyMotion ()
+	{
 		// Apply Motion // A single call to Move() must be made for velocity to properly work (ie not just show the last spliced velocity).
-		player.Move(((cameraDirection * relativeVelocity.z) + (playerCamera.transform.right * relativeVelocity.x) + (Vector3.up * verticalVelocity)) * Time.deltaTime);
+		player.Move (((cameraDirection * relativeVelocity.z) + (playerCamera.transform.right * relativeVelocity.x) + (Vector3.up * verticalVelocity)) * Time.deltaTime);
 
-		Vector3 temp = new Vector3(player.velocity.x, 0, player.velocity.z);
+		Vector3 temp = new Vector3 (player.velocity.x, 0, player.velocity.z);
 		//print(temp.magnitude);
 	}
 
-	Vector3 ChangeMagnitude(Vector3 direction, float magnitude) {
-		Vector3 temp = new Vector3(0, 0, 0);
+	Vector3 ChangeMagnitude (Vector3 direction, float magnitude)
+	{
+		Vector3 temp = new Vector3 (0, 0, 0);
 		if (direction.magnitude > 0) {
 			temp = (magnitude / direction.magnitude) * direction;
 		}
 		return temp;
 	}
 
-	void Walk() {
+	void Walk ()
+	{
 		// Get the player velocity and convert it to a velocity relative to the camera.
 
 		relativeVelocity = player.velocity;
 		relativeVelocity.y = 0;
-		relativeVelocity = Quaternion.Euler(0, shortestAngleBetween(cameraDirection, Vector3.forward) * Mathf.Rad2Deg, 0) * relativeVelocity; // Quaternions must be on the left side of a '*' operation for calculus reasons.
+		relativeVelocity = Quaternion.Euler (0, shortestAngleBetween (cameraDirection, Vector3.forward) * Mathf.Rad2Deg, 0) * relativeVelocity; // Quaternions must be on the left side of a '*' operation for calculus reasons.
 
 		// Apply Deceleration
 		if (relativeVelocity.z > -deceleration && relativeVelocity.z < deceleration) { // Cut out any values lower than the deceleration rate to remove oscillation and allow the player to stand still.
@@ -244,16 +254,16 @@ public class CharacterMovement : MonoBehaviour {
 
 		// Apply Acceleration
 		if (relativeVelocity.magnitude > maxSpeedInner) { // If the new speed has any possibility of being over the maxSpeed:
-			Vector3 excess = relativeVelocity - ChangeMagnitude(relativeVelocity, maxSpeedOuter); // Calculate any pre-existing velocity over the maxSpeed.
-			Vector3 temp = ChangeMagnitude(relativeVelocity, maxSpeedOuter) + excess; // Save it.
+			Vector3 excess = relativeVelocity - ChangeMagnitude (relativeVelocity, maxSpeedOuter); // Calculate any pre-existing velocity over the maxSpeed.
+			Vector3 temp = ChangeMagnitude (relativeVelocity, maxSpeedOuter) + excess; // Save it.
 			if (temp.magnitude < maxSpeedOuter) { // If it is negative speed (derived from speeds above maxSpeedInner but below maxSpeedOuter, negate it.
-				excess = new Vector3(0, 0, 0);
+				excess = new Vector3 (0, 0, 0);
 			}
 
 			relativeVelocity -= excess; // Remove the excess velocity the current velocity.
 
-			relativeVelocity += new Vector3(acceleration * combinedLateralInput.x, 0, acceleration * combinedLateralInput.z); // Add new acceleration.
-			relativeVelocity = ChangeMagnitude(relativeVelocity, maxSpeedOuter); // Chop off excess acceleration but maintain the new direction.
+			relativeVelocity += new Vector3 (acceleration * combinedLateralInput.x, 0, acceleration * combinedLateralInput.z); // Add new acceleration.
+			relativeVelocity = ChangeMagnitude (relativeVelocity, maxSpeedOuter); // Chop off excess acceleration but maintain the new direction.
 
 			relativeVelocity += excess; // Add back the excess.
 
@@ -261,7 +271,7 @@ public class CharacterMovement : MonoBehaviour {
 			// If the excess removal and readdition was not in place and the player was traveling at above maximum walking speed, any excess speed generated from pushers or fans would be immediately chopped off.
 			// If the input acceleration was simply based off of the combined input and excess velocities, then the excess velocity would heavily influence the input acceleration and it would be very difficult to change direction.
 		} else {
-			relativeVelocity += new Vector3(acceleration * combinedLateralInput.x, 0, acceleration * combinedLateralInput.z); // If not, simply add the input acceleration.
+			relativeVelocity += new Vector3 (acceleration * combinedLateralInput.x, 0, acceleration * combinedLateralInput.z); // If not, simply add the input acceleration.
 		}
 
 		// Redundant Code
@@ -324,14 +334,15 @@ public class CharacterMovement : MonoBehaviour {
 		*/
 	}
 
-	void Jump() { // Do I reset horizontal velocities or do I free vertical velocity?
+	void Jump ()
+	{ // Do I reset horizontal velocities or do I free vertical velocity?
 		if (player.isGrounded) {
 			verticalVelocity = 0;
 		}
 		//verticalVelocity = player.velocity.y;
 		verticalVelocity += playerGravity * Time.deltaTime; // Why is time used here? Works, don't know why. is it because acceleration is ms/^2? Then why not in movement?
 
-		if (Input.GetButton("Jump") && player.isGrounded) { // GetButtonDown is called once per button push.
+		if (Input.GetButton ("Jump") && player.isGrounded) { // GetButtonDown is called once per button push.
 			verticalVelocity += jumpSpeed;
 			// Redundant Code
 			//character.renderer.material.color = new Color(27, 233, 252, 1);
@@ -344,7 +355,8 @@ public class CharacterMovement : MonoBehaviour {
 
 	// drag = coefficient * velocity^2 / 2
 
-	void Glide2() {
+	void Glide2 ()
+	{
 		if (player.isGrounded) {
 			glideLockoutTimer = 5f;
 		}
@@ -355,9 +367,9 @@ public class CharacterMovement : MonoBehaviour {
 			float coefficient = 2f;
 			dragForce2 = coefficient * player.velocity.y * player.velocity.y / 2;
 
-			print(dragForce2);
+			print (dragForce2);
 
-			if (Input.GetButton("Jump") && glideLockoutTimer > 0) {
+			if (Input.GetButton ("Jump") && glideLockoutTimer > 0) {
 
 				verticalVelocity += dragForce2 * Time.deltaTime;
 
@@ -366,7 +378,8 @@ public class CharacterMovement : MonoBehaviour {
 		}
 	}
 
-	void Glide() {
+	void Glide ()
+	{
 		// Glide Reset if Grounded
 		if (player.isGrounded) {
 			glideLockoutTimer = 5f;
@@ -377,7 +390,7 @@ public class CharacterMovement : MonoBehaviour {
 
 		if (!player.isGrounded && verticalVelocity < -jumpSpeed) { // Is falling? // Ensures that players can't glide until they start falling.
 
-			if (Input.GetButton("Jump") && glideLockoutTimer > 0) { // Is Gliding?
+			if (Input.GetButton ("Jump") && glideLockoutTimer > 0) { // Is Gliding?
 				// Apply Glider Drag Force
 				verticalVelocity += dragForce * Time.deltaTime;
 
@@ -410,13 +423,15 @@ public class CharacterMovement : MonoBehaviour {
         */
 	}
 
-	void push() {
+	void push ()
+	{
 
 	}
 
    
 
-	void OnControllerColliderHit(ControllerColliderHit hit) {
+	void OnControllerColliderHit (ControllerColliderHit hit)
+	{
 
 		Rigidbody body = hit.collider.attachedRigidbody;
 		// Sets the glide timer to 0 if the player hits a wall.
@@ -431,7 +446,7 @@ public class CharacterMovement : MonoBehaviour {
 		if (hit.moveDirection.y > -0.3) {
 			return;
 		}
-		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+		Vector3 pushDir = new Vector3 (hit.moveDirection.x, 0, hit.moveDirection.z);
 		body.velocity = pushDir * pushPower;
 
 
@@ -457,17 +472,19 @@ public class CharacterMovement : MonoBehaviour {
 	}
 
 	// Extra Interaction Stuff Below, Not Touching That
-	void Climb() {
+	void Climb ()
+	{
 		// If inside the ladder and pressing foward - climb. Foward overrides backward.
-		if (inside == true && (Input.GetKey("w") || Input.GetAxis("X360_LStickY") < 0)) {
+		if (inside == true && (Input.GetKey ("w") || Input.GetAxis ("X360_LStickY") < 0)) {
 			ChController.transform.position += (Vector3.up * climbSpeed) * Time.deltaTime;
-		} else if (inside == true && (Input.GetKey("s") || Input.GetAxis("X360_LStickY") > 0)) {
+		} else if (inside == true && (Input.GetKey ("s") || Input.GetAxis ("X360_LStickY") > 0)) {
 			ChController.transform.position += (Vector3.down * climbSpeed) * Time.deltaTime;
 		}
 	}
 
-	void Interaction() {
-		if (Input.GetKey("f") || Input.GetKey("joystick button 2")) {
+	void Interaction ()
+	{
+		if (Input.GetKey ("f") || Input.GetKey ("joystick button 2")) {
 			interact = true;
 		} else {
 			interact = false;
@@ -475,7 +492,8 @@ public class CharacterMovement : MonoBehaviour {
 
 	}
 
-	void OnTriggerStay(Collider Col) {
+	void OnTriggerStay (Collider Col)
+	{
 		//Debug.Log("Entered Trigger");
 
 		if (Col.gameObject.tag == "Ladder") {
@@ -488,7 +506,7 @@ public class CharacterMovement : MonoBehaviour {
 		}
 
 		if (Col.gameObject.tag == "Exit") {
-			Application.LoadLevel("LadderPuzzle");
+			Application.LoadLevel ("LadderPuzzle");
 		}
 
 		if (Col.gameObject.tag == "ExitLevel2") {
@@ -496,7 +514,8 @@ public class CharacterMovement : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerExit(Collider Col) {
+	void OnTriggerExit (Collider Col)
+	{
 		if (Col.gameObject.tag == "Ladder") {
 			player.enabled = true;
 			inside = false;
@@ -512,15 +531,18 @@ public class CharacterMovement : MonoBehaviour {
         }*/
 	}
 
-	public bool Grounded() { // What is this?
-		return Physics.Raycast(player.transform.position, Vector3.down, distToGrounded, ground);
+	public bool Grounded ()
+	{ // What is this?
+		return Physics.Raycast (player.transform.position, Vector3.down, distToGrounded, ground);
 	}
 
-	void OnCollisionEnter(Collision collisionInfo) { // What is this?
+	void OnCollisionEnter (Collision collisionInfo)
+	{ // What is this?
 		onGround = true;
 	}
 
-	void OnCollisionExit(Collision collisionInfo) { // What is this?
+	void OnCollisionExit (Collision collisionInfo)
+	{ // What is this?
 		onGround = false;
 	}
 
