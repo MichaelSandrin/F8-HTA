@@ -17,6 +17,9 @@ public class CharacterMovement : MonoBehaviour
 	// Motion sometimes locks out if swapping direction keys exactly as the other is realeased
 	// Maybe slow speed when landing after a jump?
 
+	// Game
+	private Vector3 respawnPoint;
+
 	// Player
 	private CharacterController player;
 
@@ -27,60 +30,61 @@ public class CharacterMovement : MonoBehaviour
 	// Needs "Plume" (character transfrom) attached to this
 	Vector3 cameraDirection;
 
-	// Game
-	private Vector3 respawnPoint;
+	// Rendering
+	private Renderer characterRenderer;
+	// [20f]
+	public float characterRotateSpeed;
 
 	// Input
 	private Vector3 keyboardLateralInput = new Vector3 (0, 0, 0);
 	private Vector3 controllerLateralInput = new Vector3 (0, 0, 0);
 	private Vector3 combinedLateralInput = new Vector3 (0, 0, 0);
 
-	// Working Variables
-	private Vector3 relativeVelocity = new Vector3 (0, 0, 0);
-	public float verticalVelocity = 0f;
-
 	// Horizontal
+	private Vector3 relativeVelocity = new Vector3 (0, 0, 0);
 	// [.25x Max Speed]
-	public float acceleration = 1.5f;
+	public float acceleration;
 	// [.5x Acceleration]
-	public float deceleration = .75f;
+	public float deceleration;
 	// [4x Character Height]
-	public float maxSpeedOriginal = 6f;
+	public float maxSpeed;
 	private float maxSpeedOuter = 0f;
 	private float maxSpeedInner = 0f;
 
 	// Vertical
+	private float verticalVelocity = 0f;
 	// [~2x Acceleration], Max comfortable jump distance maps ~ 1:1 to jumpSpeed
-	public float jumpSpeed = 3.3f;
-	public float playerGravity = -9.8f;
-	public float deathSpeed = 100f;
+	public float jumpSpeed;
+	public float playerGravity;
+	// 30dS = <47y, 15dS = <12y
+	public float deathSpeed;
+	private bool landed = false;
+	private bool lifted = false;
+	private bool wasGrounded = true;
+	private float oldVelocity = 0f;
 
 	// Glide
-	public float glideLockoutTimer = 5f;
+	public float maxGlideEndurance;
+	public float glideEndurance;
+	public float glideStrength;
 	private float dragForce = 0f;
 
 	// Climb
-	public bool inside = false;
-	public bool interact = false;
-	public float climbSpeed = 7f;
+	public float climbSpeed;
+	private bool inside = false;
+	private bool interact = false;
 
-	// Push
-	public float pushPower = 5.0f;
-
-	// Rendering
-	public Material[] material;
-	// What is this?
-	public Renderer rend;
-
-	public float characterRotateSpeed = 20f;
+	// Boxes?
+	public float pushPower;
 
 	// Fans?
-	public float distToGrounded = 0.1f;
-	public LayerMask ground;
+	public float distToGrounded;
+	private LayerMask ground;
 
 
 	// Redundant Code
 	/*	
+	public Material[] material;
 	public float glideSpeed = 0f;
 	public float maxGlideSpeed = 3f;
 	public float HAxis;
@@ -100,8 +104,11 @@ public class CharacterMovement : MonoBehaviour
 
 		// Character
 		player = GetComponent<CharacterController> ();
-		rend = GetComponent<Renderer> ();
-		rend.enabled = true;
+		player.transform.position = respawnPoint; // Pop the player to the respawnPoint
+
+		// Renderer
+		characterRenderer = GetComponent<Renderer> ();
+		characterRenderer.enabled = true;
 
 		//material[0] = new Color(255, 108, 106, 1);
 		//rend.sharedMaterial = material[0];
@@ -166,61 +173,42 @@ public class CharacterMovement : MonoBehaviour
 		Jump ();
 		Glide ();
 
+		// ?
 		Climb ();
 		Interaction ();
 
+
+
 		ApplyMotion (); // Must come after all movement updates.
 
-		Death ();
+		Death (); // This may mess with velocity calculations
 
-		// Redundant Code
-		/*
-		 turn();
-		*/
 	}
-
-	void Death ()
-	{
-		print (player.velocity.y);
-		if (player.velocity.y <= -deathSpeed || Input.GetKey ("k")) {
-			player.transform.position = respawnPoint;
-		}
-	}
-
-	float shortestAngleBetween (Vector3 fromVector, Vector3 toVector)
-	{
-		float angle = Mathf.Atan2 (fromVector.z, fromVector.x) - Mathf.Atan2 (toVector.z, toVector.x);
-
-		float tempX = Mathf.Cos (angle);
-		float tempY = Mathf.Sin (angle);
-
-		angle = Mathf.Atan2 (tempY, tempX);
-
-		return (angle); // Returns an angle in radians
-	}
-
+		
+	// Final Functions
 	void ApplyMotion ()
 	{
 		// Apply Motion // A single call to Move() must be made for velocity to properly work (ie not just show the last spliced velocity).
 		player.Move (((cameraDirection * relativeVelocity.z) + (playerCamera.transform.right * relativeVelocity.x) + (Vector3.up * verticalVelocity)) * Time.deltaTime);
 	}
 
-	Vector3 ChangeMagnitude (Vector3 direction, float magnitude)
+	void Death ()
 	{
-		Vector3 temp = new Vector3 (0, 0, 0);
-		if (direction.magnitude > 0) {
-			temp = (magnitude / direction.magnitude) * direction;
+		if (player.isGrounded == true && wasGrounded == false) {
+			landed = true;
+		} else {
+			landed = false;
 		}
-		return temp;
+			
+		if ((oldVelocity <= -deathSpeed && landed == true) || Input.GetKey ("k")) {
+			player.transform.position = respawnPoint;
+		}
+			
+		wasGrounded = player.isGrounded;
+		oldVelocity = player.velocity.y;
 	}
 
-	Vector3 GetFlatVelocity ()
-	{
-		Vector3 temp = player.velocity;
-		temp.y = 0;
-		return temp;
-	}
-
+	// Movement Functions
 	void Walk ()
 	{
 		// Get the player velocity and convert it to a velocity relative to the camera.
@@ -249,8 +237,8 @@ public class CharacterMovement : MonoBehaviour
 		}
 
 		// Joystick magnitude controls maxSpeed not acceleration rate.
-		maxSpeedOuter = maxSpeedOriginal * combinedLateralInput.magnitude; // Actual maxSpeed multiplied by the joystick magnitude.
-		maxSpeedInner = (maxSpeedOriginal - acceleration) * combinedLateralInput.magnitude; // maxSpeed minus acceleration (for determining if the next speed will be greater or less than the actual maxSpeed.
+		maxSpeedOuter = maxSpeed * combinedLateralInput.magnitude; // Actual maxSpeed multiplied by the joystick magnitude.
+		maxSpeedInner = (maxSpeed - acceleration) * combinedLateralInput.magnitude; // maxSpeed minus acceleration (for determining if the next speed will be greater or less than the actual maxSpeed.
 		if (maxSpeedInner < 0) { // Clamp above 0.
 			maxSpeedInner = 0;
 		}
@@ -340,6 +328,35 @@ public class CharacterMovement : MonoBehaviour
 		*/
 	}
 
+	// Working Functions
+	Vector3 GetFlatVelocity ()
+	{
+		Vector3 temp = player.velocity;
+		temp.y = 0;
+		return temp;
+	}
+
+	Vector3 ChangeMagnitude (Vector3 direction, float magnitude)
+	{
+		Vector3 temp = new Vector3 (0, 0, 0);
+		if (direction.magnitude > 0) {
+			temp = (magnitude / direction.magnitude) * direction;
+		}
+		return temp;
+	}
+
+	float shortestAngleBetween (Vector3 fromVector, Vector3 toVector)
+	{
+		float angle = Mathf.Atan2 (fromVector.z, fromVector.x) - Mathf.Atan2 (toVector.z, toVector.x);
+
+		float tempX = Mathf.Cos (angle);
+		float tempY = Mathf.Sin (angle);
+
+		angle = Mathf.Atan2 (tempY, tempX);
+
+		return (angle); // Returns an angle in radians
+	}
+
 	void Jump ()
 	{ // Do I reset horizontal velocities or do I free vertical velocity?
 		if (player.isGrounded) {
@@ -360,33 +377,32 @@ public class CharacterMovement : MonoBehaviour
 	}
 
 	// drag = coefficient * velocity^2 / 2
-
 	void Glide ()
 	{
 		if (player.isGrounded) {
-			glideLockoutTimer = 5f;
+			glideEndurance = maxGlideEndurance;
 		}
 
-		if (!player.isGrounded && verticalVelocity < -jumpSpeed) {
-			float coefficient = 2f;
-			dragForce = coefficient * player.velocity.y * player.velocity.y / 2;
+		if (!player.isGrounded && verticalVelocity < -0.5f) { // this caps the max fall speed so it cant just be -jumpSpeed, the fall speed at the end of the jump is faster than Id like teh minimum glide speed to be, how do I disable glide for jumping but not for aything else? maybe a timer after jumping?(use the lift function)
+			// do a glide disable for the flat jump time after jumping (this makes sure you can glide directly off of a cliff but keeps the jump from gliding)
+			dragForce = glideStrength * player.velocity.y * player.velocity.y / 2;
 
-			if (Input.GetButton ("Jump") && glideLockoutTimer > 0) {
-
+			if (Input.GetButton ("Jump") && glideEndurance > 0) {
+				// Need to keep player from bouncing up if drag force is too big - basically cap it at the fall speed
 				verticalVelocity += dragForce * Time.deltaTime;
-
-				glideLockoutTimer -= 1f * Time.deltaTime;
+				glideEndurance -= dragForce * Time.deltaTime;
 			}
 		}
 	}
-
+		
+	// Boxes?
 	void OnControllerColliderHit (ControllerColliderHit hit)
 	{
 
 		Rigidbody body = hit.collider.attachedRigidbody;
 		// Sets the glide timer to 0 if the player hits a wall.
 		if (hit.normal.y != 1 && hit.controller.detectCollisions) { // 'wall.normal.y != 1' Does this just mean if its not completely flat?
-			glideLockoutTimer = 0;
+			glideEndurance = 0;
 		}
 
 		if (body == null || body.isKinematic) {
@@ -464,6 +480,7 @@ public class CharacterMovement : MonoBehaviour
 		}
 	}
 
+	// Ladder?
 	void OnTriggerExit (Collider Col)
 	{
 		if (Col.gameObject.tag == "Ladder") {
@@ -481,13 +498,12 @@ public class CharacterMovement : MonoBehaviour
         }*/
 	}
 
+	// Fans?
 	public bool Grounded ()
 	{ // What is this?
 		return Physics.Raycast (player.transform.position, Vector3.down, distToGrounded, ground);
 	}
-
-
-
+		
 	// Redundant Code
 	/*
 
@@ -495,7 +511,7 @@ public class CharacterMovement : MonoBehaviour
 	{
 		// Glide Reset if Grounded
 		if (player.isGrounded) {
-			glideLockoutTimer = 5f;
+			glideEndurance = 5f;
 			//glideSpeed = 0f;
 
 			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(255 / 255, 108 / 255, 106 / 255, 255 / 255);
@@ -503,12 +519,12 @@ public class CharacterMovement : MonoBehaviour
 
 		if (!player.isGrounded && verticalVelocity < -jumpSpeed) { // Is falling? // Ensures that players can't glide until they start falling.
 
-			if (Input.GetButton ("Jump") && glideLockoutTimer > 0) { // Is Gliding?
+			if (Input.GetButton ("Jump") && glideEndurance > 0) { // Is Gliding?
 				// Apply Glider Drag Force
 				verticalVelocity += dragForce * Time.deltaTime;
 
 				// Reduce Glide Timer
-				glideLockoutTimer -= 1f * Time.deltaTime;
+				glideEndurance -= 1f * Time.deltaTime;
 
 				//glideSpeed -= deceleration;
 				//glideSpeed = Mathf.Clamp(glideSpeed, 0, maxGlideSpeed);
