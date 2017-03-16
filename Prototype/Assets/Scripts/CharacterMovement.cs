@@ -17,9 +17,6 @@ public class CharacterMovement : MonoBehaviour
 	// Motion sometimes locks out if swapping direction keys exactly as the other is realeased
 	// Maybe slow speed when landing after a jump?
 
-	// Game
-	public Vector3 respawnPoint;
-
 	// Player
 	private CharacterController player;
 
@@ -28,53 +25,39 @@ public class CharacterMovement : MonoBehaviour
 	// Needs "Main Camera" Attached
 	public Transform ChController;
 	// Needs "Plume" (character transfrom) attached to this
-
 	Vector3 cameraDirection;
 
+	// Game
+	private Vector3 respawnPoint;
+
 	// Input
-	Vector3 keyboardLateralInput = new Vector3 (0, 0, 0);
-	Vector3 controllerLateralInput = new Vector3 (0, 0, 0);
-	Vector3 combinedLateralInput = new Vector3 (0, 0, 0);
+	private Vector3 keyboardLateralInput = new Vector3 (0, 0, 0);
+	private Vector3 controllerLateralInput = new Vector3 (0, 0, 0);
+	private Vector3 combinedLateralInput = new Vector3 (0, 0, 0);
 
-	private float fbVelocity = 0f;
-	private float lrVelocity = 0f;
-	Vector3 relativeVelocity = new Vector3 (0, 0, 0);
+	// Working Variables
+	private Vector3 relativeVelocity = new Vector3 (0, 0, 0);
+	public float verticalVelocity = 0f;
 
-	private float acceleration = 1.5f;
+	// Horizontal
 	// [.25x Max Speed]
-	private float deceleration = .75f;
+	public float acceleration = 1.5f;
 	// [.5x Acceleration]
-
-	public float maxSpeedOriginal = 6f;
+	public float deceleration = .75f;
 	// [4x Character Height]
-	public float maxSpeed = 0f;
+	public float maxSpeedOriginal = 6f;
 	private float maxSpeedOuter = 0f;
 	private float maxSpeedInner = 0f;
 
-	// Vertical Movement
+	// Vertical
+	// [~2x Acceleration], Max comfortable jump distance maps ~ 1:1 to jumpSpeed
 	public float jumpSpeed = 3.3f;
-	// [~2x Acceleration]
-	// Max comfortable jump distance maps ~ 1:1 to jumpSpeed
-
-	// Jump
-	public bool onGround;
-	public float groundSphere = 0.3f;
-
-	public float distToGrounded = 0.1f;
-	public LayerMask ground;
-
-	public float verticalVelocity = 0f;
 	public float playerGravity = -9.8f;
+	public float deathSpeed = 100f;
 
 	// Glide
 	public float glideLockoutTimer = 5f;
-	public float maxGlideSpeed = 3f;
-	public float glideSpeed = 0f;
-
-	// This is really finicky and needs to be within 8-9 to be noticeable.
-	private float dragForce = 8.8f;
-	private float dragForce2 = 0f;
-
+	private float dragForce = 0f;
 
 	// Climb
 	public bool inside = false;
@@ -91,8 +74,15 @@ public class CharacterMovement : MonoBehaviour
 
 	public float characterRotateSpeed = 20f;
 
+	// Fans?
+	public float distToGrounded = 0.1f;
+	public LayerMask ground;
+
+
 	// Redundant Code
-	/*
+	/*	
+	public float glideSpeed = 0f;
+	public float maxGlideSpeed = 3f;
 	public float HAxis;
 	public float VAxis;
 
@@ -171,22 +161,30 @@ public class CharacterMovement : MonoBehaviour
 	// Called once per physics calculation (fixed timeline). Is called just before physics (rigidbody) are updated. Should be used for physics calculations.
 	void FixedUpdate ()
 	{
-
-
 		// Movement
 		Walk ();
 		Jump ();
-		Glide2 ();
+		Glide ();
 
 		Climb ();
 		Interaction ();
 
 		ApplyMotion (); // Must come after all movement updates.
 
+		Death ();
+
 		// Redundant Code
 		/*
 		 turn();
 		*/
+	}
+
+	void Death ()
+	{
+		print (player.velocity.y);
+		if (player.velocity.y <= -deathSpeed || Input.GetKey ("k")) {
+			player.transform.position = respawnPoint;
+		}
 	}
 
 	float shortestAngleBetween (Vector3 fromVector, Vector3 toVector)
@@ -205,9 +203,6 @@ public class CharacterMovement : MonoBehaviour
 	{
 		// Apply Motion // A single call to Move() must be made for velocity to properly work (ie not just show the last spliced velocity).
 		player.Move (((cameraDirection * relativeVelocity.z) + (playerCamera.transform.right * relativeVelocity.x) + (Vector3.up * verticalVelocity)) * Time.deltaTime);
-
-		Vector3 temp = new Vector3 (player.velocity.x, 0, player.velocity.z);
-		//print(temp.magnitude);
 	}
 
 	Vector3 ChangeMagnitude (Vector3 direction, float magnitude)
@@ -262,7 +257,6 @@ public class CharacterMovement : MonoBehaviour
 
 		// Apply Acceleration
 		if (relativeVelocity.magnitude > maxSpeedInner) { // If the new speed has any possibility of being over the maxSpeed:
-			print (combinedLateralInput.x + "L");
 			Vector3 excess = relativeVelocity - ChangeMagnitude (relativeVelocity, maxSpeedOuter); // Calculate any pre-existing velocity over the maxSpeed.
 			Vector3 temp = ChangeMagnitude (relativeVelocity, maxSpeedOuter) + excess; // Save it.
 			if (temp.magnitude < maxSpeedOuter) { // If it is negative speed (derived from speeds above maxSpeedInner but below maxSpeedOuter, negate it.
@@ -367,80 +361,24 @@ public class CharacterMovement : MonoBehaviour
 
 	// drag = coefficient * velocity^2 / 2
 
-	void Glide2 ()
+	void Glide ()
 	{
 		if (player.isGrounded) {
 			glideLockoutTimer = 5f;
 		}
-
-
 
 		if (!player.isGrounded && verticalVelocity < -jumpSpeed) {
 			float coefficient = 2f;
-			dragForce2 = coefficient * player.velocity.y * player.velocity.y / 2;
-
-			print (dragForce2);
+			dragForce = coefficient * player.velocity.y * player.velocity.y / 2;
 
 			if (Input.GetButton ("Jump") && glideLockoutTimer > 0) {
 
-				verticalVelocity += dragForce2 * Time.deltaTime;
-
-				glideLockoutTimer -= 1f * Time.deltaTime;
-			}
-		}
-	}
-
-	void Glide ()
-	{
-		// Glide Reset if Grounded
-		if (player.isGrounded) {
-			glideLockoutTimer = 5f;
-			//glideSpeed = 0f;
-
-			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(255 / 255, 108 / 255, 106 / 255, 255 / 255);
-		}
-
-		if (!player.isGrounded && verticalVelocity < -jumpSpeed) { // Is falling? // Ensures that players can't glide until they start falling.
-
-			if (Input.GetButton ("Jump") && glideLockoutTimer > 0) { // Is Gliding?
-				// Apply Glider Drag Force
 				verticalVelocity += dragForce * Time.deltaTime;
 
-				// Reduce Glide Timer
 				glideLockoutTimer -= 1f * Time.deltaTime;
-
-				//glideSpeed -= deceleration;
-				//glideSpeed = Mathf.Clamp(glideSpeed, 0, maxGlideSpeed);
-				//glideSpeed += (1f);
-
-				//verticalVelocity -= playerGravity * Time.deltaTime;
-				//renderer.material.color = new Color(0.5f, 1, 1);
-				//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(0.1059f, 0.9137f, 0.988f, 1);
-				//wingEdurance -= Time.deltaTime;
 			}
-			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(0.227f, 0.227f, 0.227f, 1);
-
-			// Redundant Code
-			//flightControll();
-			//character.enabled = true;
 		}
-
-		/*
-        if(fallVelocity < -18 && inside != true)
-        {
-
-            character.transform.position = respawnPoint;
-            print("Death");
-        }
-        */
 	}
-
-	void push ()
-	{
-
-	}
-
-   
 
 	void OnControllerColliderHit (ControllerColliderHit hit)
 	{
@@ -548,6 +486,50 @@ public class CharacterMovement : MonoBehaviour
 		return Physics.Raycast (player.transform.position, Vector3.down, distToGrounded, ground);
 	}
 
+
+
+	// Redundant Code
+	/*
+
+	void Glide ()
+	{
+		// Glide Reset if Grounded
+		if (player.isGrounded) {
+			glideLockoutTimer = 5f;
+			//glideSpeed = 0f;
+
+			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(255 / 255, 108 / 255, 106 / 255, 255 / 255);
+		}
+
+		if (!player.isGrounded && verticalVelocity < -jumpSpeed) { // Is falling? // Ensures that players can't glide until they start falling.
+
+			if (Input.GetButton ("Jump") && glideLockoutTimer > 0) { // Is Gliding?
+				// Apply Glider Drag Force
+				verticalVelocity += dragForce * Time.deltaTime;
+
+				// Reduce Glide Timer
+				glideLockoutTimer -= 1f * Time.deltaTime;
+
+				//glideSpeed -= deceleration;
+				//glideSpeed = Mathf.Clamp(glideSpeed, 0, maxGlideSpeed);
+				//glideSpeed += (1f);
+
+				//verticalVelocity -= playerGravity * Time.deltaTime;
+				//renderer.material.color = new Color(0.5f, 1, 1);
+				//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(0.1059f, 0.9137f, 0.988f, 1);
+				//wingEdurance -= Time.deltaTime;
+			}
+			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(0.227f, 0.227f, 0.227f, 1);
+
+			// Redundant Code
+			//flightControll();
+			//character.enabled = true;
+		}
+
+	private float calculateDragForce() {
+		return (player.velocity.y * player.velocity.y * dragCoefficient) / 2;
+	}
+
 	void OnCollisionEnter (Collision collisionInfo)
 	{ // What is this?
 		onGround = true;
@@ -558,14 +540,6 @@ public class CharacterMovement : MonoBehaviour
 		onGround = false;
 	}
 
-	// Redundant Code
-	/*
-	private float calculateDragForce() {
-		return (player.velocity.y * player.velocity.y * dragCoefficient) / 2;
-	}
-	*/
-
-	/*
     void onControllerColliderHit (ControllerColliderHit hit)
     {
         Rigidbody body = hit.collider.attachedRigidbody;
