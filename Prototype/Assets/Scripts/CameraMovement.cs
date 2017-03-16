@@ -19,9 +19,9 @@ public class CameraMovement : MonoBehaviour
 	public float inputY = 0f;
 
 	// Angle Constraints
-	public const float Y_ANGLE_MIN = -44.9f;
-	//-44.9 keeps the camera from flipping over the vertical axis.
-	public const float Y_ANGLE_MAX = 50f;
+	public const float Y_ANGLE_MIN = -70f;
+	//-89.9 keeps the camera from flipping over the vertical axis.
+	public const float Y_ANGLE_MAX = 70f;
 
 	// Camera Placement
 	public float startingHeight = 0f;
