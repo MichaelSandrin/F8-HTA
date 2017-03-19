@@ -69,6 +69,10 @@ public class CharacterMovement : MonoBehaviour
 	public float glideStrength;
 	private float dragForce = 0f;
 
+	public float glideDelay;
+	private float glideDelayCount;
+	private bool glideDelayOn = false;
+
 	// Climb
 	public float climbSpeed;
 	private bool inside = false;
@@ -176,8 +180,6 @@ public class CharacterMovement : MonoBehaviour
 		// ?
 		Climb ();
 		Interaction ();
-
-
 
 		ApplyMotion (); // Must come after all movement updates.
 
@@ -367,6 +369,8 @@ public class CharacterMovement : MonoBehaviour
 
 		if (Input.GetButton ("Jump") && player.isGrounded) { // GetButtonDown is called once per button push.
 			verticalVelocity += jumpSpeed;
+
+			glideDelayOn = true;
 			// Redundant Code
 			//character.renderer.material.color = new Color(27, 233, 252, 1);
 			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(255 / 255, 108 / 255, 106 / 255, 255 / 255);
@@ -383,7 +387,16 @@ public class CharacterMovement : MonoBehaviour
 			glideEndurance = maxGlideEndurance;
 		}
 
-		if (!player.isGrounded && verticalVelocity < -0.5f) { // this caps the max fall speed so it cant just be -jumpSpeed, the fall speed at the end of the jump is faster than Id like teh minimum glide speed to be, how do I disable glide for jumping but not for aything else? maybe a timer after jumping?(use the lift function)
+		if (glideDelayOn = true) {
+			glideDelayCount -= 1 * Time.deltaTime;
+		}
+
+		if (glideDelayCount <= 0) {
+			glideDelayCount = glideDelay;
+			glideDelayOn = false;
+		}
+
+		if (!player.isGrounded && glideDelayOn == false && player.velocity.y < 0) { // this caps the max fall speed so it cant just be -jumpSpeed, the fall speed at the end of the jump is faster than Id like teh minimum glide speed to be, how do I disable glide for jumping but not for aything else? maybe a timer after jumping?(use the lift function)
 			// do a glide disable for the flat jump time after jumping (this makes sure you can glide directly off of a cliff but keeps the jump from gliding)
 			dragForce = glideStrength * player.velocity.y * player.velocity.y / 2;
 
