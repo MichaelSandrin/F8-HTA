@@ -69,6 +69,7 @@ public class CharacterMovement : MonoBehaviour
 	public float glideStrength;
 	private float dragForce = 0f;
 
+	// [Equal to Flat Jump Time]
 	public float glideDelay;
 	private float glideDelayCount;
 	private bool glideDelayOn = false;
@@ -380,30 +381,32 @@ public class CharacterMovement : MonoBehaviour
 		//character.transform.rotation = Quaternion.Lerp(character.transform.rotation, Quaternion.LookRotation(character.transform.position - previousPosition), Time.deltaTime * characterRotateSpeed);
 	}
 
-	// drag = coefficient * velocity^2 / 2
 	void Glide ()
 	{
-		if (player.isGrounded) {
+		if (player.isGrounded) { // When the player touches the ground: reset the glide resource
 			glideEndurance = maxGlideEndurance;
 		}
 
-		if (glideDelayOn = true) {
+		if (glideDelayOn == true) { // If the glide delay is on (from after jumping): count down the timer
 			glideDelayCount -= 1 * Time.deltaTime;
 		}
 
-		if (glideDelayCount <= 0) {
+		if (glideDelayCount <= 0) { // If the timer hits zero: reset the timer and turn the glide delay off
 			glideDelayCount = glideDelay;
 			glideDelayOn = false;
 		}
 
-		if (!player.isGrounded && glideDelayOn == false && player.velocity.y < 0) { // this caps the max fall speed so it cant just be -jumpSpeed, the fall speed at the end of the jump is faster than Id like teh minimum glide speed to be, how do I disable glide for jumping but not for aything else? maybe a timer after jumping?(use the lift function)
+		if (!player.isGrounded && player.velocity.y < 0f && glideDelayOn == false) { // this caps the max fall speed so it cant just be -jumpSpeed, the fall speed at the end of the jump is faster than Id like teh minimum glide speed to be, how do I disable glide for jumping but not for aything else? maybe a timer after jumping?(use the lift function)
 			// do a glide disable for the flat jump time after jumping (this makes sure you can glide directly off of a cliff but keeps the jump from gliding)
-			dragForce = glideStrength * player.velocity.y * player.velocity.y / 2;
+			dragForce = glideStrength * (player.velocity.y * player.velocity.y / 2) * Time.deltaTime;
+
+			if (dragForce > -player.velocity.y) { // If the drag force will cause the player to go up, cap it
+				dragForce = -player.velocity.y;
+			}
 
 			if (Input.GetButton ("Jump") && glideEndurance > 0) {
-				// Need to keep player from bouncing up if drag force is too big - basically cap it at the fall speed
-				verticalVelocity += dragForce * Time.deltaTime;
-				glideEndurance -= dragForce * Time.deltaTime;
+				verticalVelocity += dragForce;
+				glideEndurance -= dragForce;
 			}
 		}
 	}
@@ -411,7 +414,6 @@ public class CharacterMovement : MonoBehaviour
 	// Boxes?
 	void OnControllerColliderHit (ControllerColliderHit hit)
 	{
-
 		Rigidbody body = hit.collider.attachedRigidbody;
 		// Sets the glide timer to 0 if the player hits a wall.
 		if (hit.normal.y != 1 && hit.controller.detectCollisions) { // 'wall.normal.y != 1' Does this just mean if its not completely flat?
