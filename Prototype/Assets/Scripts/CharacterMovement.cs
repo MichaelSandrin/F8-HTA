@@ -404,6 +404,10 @@ public class CharacterMovement : MonoBehaviour
 				dragForce = -player.velocity.y;
 			}
 
+			if (dragForce > maxGlideEndurance) { // Dont let the player completely stop their speed if they're falling super fast
+				dragForce = maxGlideEndurance;
+			}
+
 			if (Input.GetButton ("Jump") && glideEndurance > 0) {
 				verticalVelocity += dragForce;
 				glideEndurance -= dragForce;
