@@ -24,9 +24,12 @@ public class CameraMovement : MonoBehaviour
 	public const float Y_ANGLE_MAX = 70f;
 
 	// Camera Placement
-	public float startingHeight = 0f;
+	// Leave at -20
+	public float startingHeight;
 	// This influences the clamp angles.
 	public float distance = 4f;
+	// Depending on the character's origin
+	public Vector3 offset;
 
 
 	// Redundant Code
@@ -53,7 +56,7 @@ public class CameraMovement : MonoBehaviour
 
 		// Camera
 		cameraTransform = playerCamera.transform;
-
+		inputY += startingHeight;
 		//PlayerCamera = GetComponent<Camera>();
 	}
 
@@ -108,7 +111,7 @@ public class CameraMovement : MonoBehaviour
 	void LateUpdate ()
 	{
 		// Default camera distance and height.
-		Vector3 direction = new Vector3 (0, startingHeight, distance); // This needs to be in LateUpdate() for some reason. Works, don't know how.
+		Vector3 direction = new Vector3 (0, 0, distance); // This needs to be in LateUpdate() for some reason. Works, don't know how.
 
 		// Convert input into a quaternion rotation.
 		Quaternion rotation = Quaternion.Euler (inputY, inputX, 0); // "Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order)."
@@ -117,7 +120,7 @@ public class CameraMovement : MonoBehaviour
 		cameraTransform.position = playerTransform.position + (rotation * direction); // Multiplying Quaternion rotation by Vector3 direction effectively rotates the vector
 
 		// Sets the camera to look at the player's position.
-		cameraTransform.LookAt (playerTransform.position);
+		cameraTransform.LookAt (playerTransform.position + offset);
 
 		// Where is cameraTransform ever applied to the actual main camera?
 	}
