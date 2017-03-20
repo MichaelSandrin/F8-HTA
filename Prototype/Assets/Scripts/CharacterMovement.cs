@@ -17,6 +17,10 @@ public class CharacterMovement : MonoBehaviour
 	// Motion sometimes locks out if swapping direction keys exactly as the other is realeased
 	// Maybe slow speed when landing after a jump?
 
+	// Character cape needs to move itself quicker
+	// Character origin needs to be reset properly
+	// Move glow wing into character movement
+
 	// Game
 	private Vector3 respawnPoint;
 
@@ -56,7 +60,7 @@ public class CharacterMovement : MonoBehaviour
 	// [~2x Acceleration], Max comfortable jump distance maps ~ 1:1 to jumpSpeed
 	public float jumpSpeed;
 	public float playerGravity;
-	// 30dS = <47y, 15dS = <12y
+	// 15 = ~>12 high
 	public float deathSpeed;
 	private bool landed = false;
 	private bool lifted = false;
@@ -64,10 +68,15 @@ public class CharacterMovement : MonoBehaviour
 	private float oldVelocity = 0f;
 
 	// Glide
+	// These values are super finicky, don't touch anything in here.
+	// 30 = ~3 seconds
 	public float maxGlideEndurance;
 	public float glideEndurance;
+	// [8 = ~ ~>15degrees]
 	public float glideStrength;
-	private float dragForce = 0f;
+	private float dragForce;
+	// [1.3 = ~>30high]
+	public float enduranceCurvePower;
 
 	// [Equal to Flat Jump Time]
 	public float glideDelay;
@@ -383,30 +392,43 @@ public class CharacterMovement : MonoBehaviour
 
 	void Glide ()
 	{
+		// Reset Glide
 		if (player.isGrounded) { // When the player touches the ground: reset the glide resource
 			glideEndurance = maxGlideEndurance;
 		}
 
+		// Timer
 		if (glideDelayOn == true) { // If the glide delay is on (from after jumping): count down the timer
 			glideDelayCount -= 1 * Time.deltaTime;
 		}
-
 		if (glideDelayCount <= 0) { // If the timer hits zero: reset the timer and turn the glide delay off
 			glideDelayCount = glideDelay;
 			glideDelayOn = false;
 		}
 
-		if (!player.isGrounded && player.velocity.y < 0f && glideDelayOn == false) { // this caps the max fall speed so it cant just be -jumpSpeed, the fall speed at the end of the jump is faster than Id like teh minimum glide speed to be, how do I disable glide for jumping but not for aything else? maybe a timer after jumping?(use the lift function)
-			// do a glide disable for the flat jump time after jumping (this makes sure you can glide directly off of a cliff but keeps the jump from gliding)
-			dragForce = glideStrength * (player.velocity.y * player.velocity.y / 2) * Time.deltaTime;
+		// Drag
 
+
+
+		if (!player.isGrounded && player.velocity.y < 0f && glideDelayOn == false && glideEndurance > 0) { // If able to glide:
+			// Drag Equation
+			dragForce = glideStrength * (Mathf.Pow (player.velocity.y, 2) / 2) * Time.deltaTime; 
+
+			// Caps
 			if (dragForce > -player.velocity.y) { // If the drag force will cause the player to go up, cap it
 				dragForce = -player.velocity.y;
 			}
 
-			if (Input.GetButton ("Jump") && glideEndurance > 0) {
-				verticalVelocity += dragForce;
-				glideEndurance -= dragForce;
+			float tempDrag = Mathf.Pow (dragForce, 1.3f);
+
+			if (tempDrag > glideEndurance) { // Dont let the player completely stop their speed if they're falling super fast
+				tempDrag = glideEndurance;
+			}
+				
+			// Apply
+			if (Input.GetButton ("Jump")) {
+				verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
+				glideEndurance -= tempDrag;
 			}
 		}
 	}
