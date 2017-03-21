@@ -467,8 +467,10 @@ public class CharacterMovement : MonoBehaviour
 		if (hit.normal.y != 1 && hit.controller.detectCollisions) { // 'wall.normal.y != 1' Does this just mean if its not completely flat?
 			animator.SetBool ("Push", true);
 			glideEndurance = 0;
+            print("true");
 		} else {
 			animator.SetBool ("Push", false);
+            print("false");
 		}
 
 		float pushForce = 2.0f;
@@ -510,9 +512,9 @@ public class CharacterMovement : MonoBehaviour
 
 	void OnTriggerStay (Collider Col)
 	{
-		//Debug.Log("Entered Trigger");
-
-		if (Col.gameObject.tag == "Ladder") {
+        //Debug.Log("Entered Trigger");
+        var animator = gameObject.GetComponent<Animator>();
+        if (Col.gameObject.tag == "Ladder") {
 			//interaction();
 			if (interact == true) {
 				player.enabled = false;
@@ -521,7 +523,8 @@ public class CharacterMovement : MonoBehaviour
 			//currentLerpTime += Time.deltaTime; 
 		}
 
-		if (Col.gameObject.tag == "Exit") {
+
+        if (Col.gameObject.tag == "Exit") {
 			Application.LoadLevel ("LadderPuzzle");
 		}
 
@@ -533,12 +536,14 @@ public class CharacterMovement : MonoBehaviour
 	// Ladder?
 	void OnTriggerExit (Collider Col)
 	{
-		if (Col.gameObject.tag == "Ladder") {
+
+        if (Col.gameObject.tag == "Ladder") {
 			player.enabled = true;
 			inside = false;
 			interact = false;
 		}
-		/*
+     
+        /*
         if (currentLerpTime == lerpTime)
         {
             currentLerpTime = 0;
@@ -546,7 +551,7 @@ public class CharacterMovement : MonoBehaviour
         {
             currentLerpTime = 0;
         }*/
-	}
+    }
 
 	// Fans?
 	public bool Grounded ()
