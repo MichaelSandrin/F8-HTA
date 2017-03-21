@@ -77,6 +77,7 @@ public class CharacterMovement : MonoBehaviour
 	private float dragForce;
 	// [1.3 = ~>30high]
 	public float enduranceCurvePower;
+    public bool gliding = false;
 
 	// [Equal to Flat Jump Time]
 	public float glideDelay;
@@ -407,7 +408,7 @@ public class CharacterMovement : MonoBehaviour
 		//character.transform.rotation = Quaternion.Lerp(character.transform.rotation, Quaternion.LookRotation(character.transform.position - previousPosition), Time.deltaTime * characterRotateSpeed);
 	}
 
-	void Glide ()
+    void Glide ()
 	{
 		var animator = gameObject.GetComponent<Animator>();
 
@@ -445,7 +446,8 @@ public class CharacterMovement : MonoBehaviour
 			// Apply
 			if (Input.GetButton ("Jump")) {
 				animator.SetTrigger ("GlideStart");
-				verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
+                gliding = true;
+                verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
 				glideEndurance -= tempDrag;
 			}
 		}
