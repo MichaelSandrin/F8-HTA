@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: a87d7ee866765ab448a2e366f9ba058e
-timeCreated: 1489870231
+guid: 2e800a4c157c78040a41208e2fcf1a0e
+timeCreated: 1490050530
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -87,7 +87,7 @@ ModelImporter:
     400076: transb
     400078: Waist
     400080: Wrist_L
-    7400000: hoploop
+    7400000: idle
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -111,17 +111,17 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: hoploop
+      name: idle
       takeName: Take 001
-      firstFrame: 30.5
-      lastFrame: 31
+      firstFrame: 1
+      lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -217,7 +217,7 @@ ModelImporter:
         weight: 1
       - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_R
         weight: 1
-      maskType: 0
+      maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     isReadable: 1
@@ -241,7 +241,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 4
+    tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -259,7 +259,7 @@ ModelImporter:
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
-    skeletonHasParents: 0
+    skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1

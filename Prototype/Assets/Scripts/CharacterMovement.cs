@@ -223,6 +223,8 @@ public class CharacterMovement : MonoBehaviour
 	// Movement Functions
 	void Walk ()
 	{
+		var animator = gameObject.GetComponent<Animator>();
+
 		// Get the player velocity and convert it to a velocity relative to the camera.
 		relativeVelocity = GetFlatVelocity ();
 		relativeVelocity = Quaternion.Euler (0, shortestAngleBetween (cameraDirection, Vector3.forward) * Mathf.Rad2Deg, 0) * relativeVelocity; // Quaternions must be on the left side of a '*' operation for calculus reasons.
@@ -246,6 +248,12 @@ public class CharacterMovement : MonoBehaviour
 		}
 		if (relativeVelocity.x <= -deceleration) {
 			relativeVelocity.x += deceleration;
+		}
+
+		if (relativeVelocity.x != 0 || relativeVelocity.z != 0) {
+			animator.SetBool ("Run", true);
+		} else {
+			animator.SetBool ("Run", false);
 		}
 
 		// Joystick magnitude controls maxSpeed not acceleration rate.
@@ -371,27 +379,38 @@ public class CharacterMovement : MonoBehaviour
 
 	void Jump ()
 	{ // Do I reset horizontal velocities or do I free vertical velocity?
+
+		var animator = gameObject.GetComponent<Animator>();
+
+
 		if (player.isGrounded) {
 			verticalVelocity = 0;
+			animator.SetTrigger ("GlideEnd");
+			animator.SetBool ("Hop", false);
 		}
-		//verticalVelocity = player.velocity.y;
-		verticalVelocity += playerGravity * Time.deltaTime; // Why is time used here? Works, don't know why. is it because acceleration is ms/^2? Then why not in movement?
 
-		if (Input.GetButton ("Jump") && player.isGrounded) { // GetButtonDown is called once per button push.
+		if (verticalVelocity < 0) {
+			//verticalVelocity += jumpSpeed;
+			animator.SetBool ("Hop", true); 
+		}
+
+		if (Input.GetButton ("Jump") && player.isGrounded) {
 			verticalVelocity += jumpSpeed;
-
+			animator.SetBool ("Hop", true); 
 			glideDelayOn = true;
-			// Redundant Code
-			//character.renderer.material.color = new Color(27, 233, 252, 1);
-			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(255 / 255, 108 / 255, 106 / 255, 255 / 255);
-			//GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = new Color(27, 233, 252, 1);
 		}
+
+		//verticalVelocity = player.velocity.y;
+		verticalVelocity += playerGravity * Time.deltaTime; // Why is time used here? Works, don't know why. is it because acceleration is ms/^2? Then why not in movement?		
+
 		// Redundant Code
 		//character.transform.rotation = Quaternion.Lerp(character.transform.rotation, Quaternion.LookRotation(character.transform.position - previousPosition), Time.deltaTime * characterRotateSpeed);
 	}
 
 	void Glide ()
 	{
+		var animator = gameObject.GetComponent<Animator>();
+
 		// Reset Glide
 		if (player.isGrounded) { // When the player touches the ground: reset the glide resource
 			glideEndurance = maxGlideEndurance;
@@ -400,20 +419,18 @@ public class CharacterMovement : MonoBehaviour
 		// Timer
 		if (glideDelayOn == true) { // If the glide delay is on (from after jumping): count down the timer
 			glideDelayCount -= 1 * Time.deltaTime;
+
 		}
 		if (glideDelayCount <= 0) { // If the timer hits zero: reset the timer and turn the glide delay off
 			glideDelayCount = glideDelay;
 			glideDelayOn = false;
-		}
+		} 
 
 		// Drag
-
-
 
 		if (!player.isGrounded && player.velocity.y < 0f && glideDelayOn == false && glideEndurance > 0) { // If able to glide:
 			// Drag Equation
 			dragForce = glideStrength * (Mathf.Pow (player.velocity.y, 2) / 2) * Time.deltaTime; 
-
 			// Caps
 			if (dragForce > -player.velocity.y) { // If the drag force will cause the player to go up, cap it
 				dragForce = -player.velocity.y;
@@ -427,51 +444,45 @@ public class CharacterMovement : MonoBehaviour
 				
 			// Apply
 			if (Input.GetButton ("Jump")) {
+				animator.SetTrigger ("GlideStart");
 				verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
 				glideEndurance -= tempDrag;
 			}
+		}
+
+		if (glideEndurance <= 0) {
+			animator.SetTrigger ("GlideEnd");
 		}
 	}
 		
 	// Boxes?
 	void OnControllerColliderHit (ControllerColliderHit hit)
 	{
+		var animator = gameObject.GetComponent<Animator>();
+
 		Rigidbody body = hit.collider.attachedRigidbody;
 		// Sets the glide timer to 0 if the player hits a wall.
 		if (hit.normal.y != 1 && hit.controller.detectCollisions) { // 'wall.normal.y != 1' Does this just mean if its not completely flat?
+			animator.SetBool ("Push", true);
 			glideEndurance = 0;
+		} else {
+			animator.SetBool ("Push", false);
 		}
 
-		if (body == null || body.isKinematic) {
+		float pushForce = 2.0f;
+
+		//checking whether rigidbody is either non-existant or kinematic
+		if (body == null || body.isKinematic)
 			return;
-		}
 
-		if (hit.moveDirection.y > -0.3) {
+		if (hit.moveDirection.y < -.3f)
 			return;
-		}
-		Vector3 pushDir = new Vector3 (hit.moveDirection.x, 0, hit.moveDirection.z);
-		body.velocity = pushDir * pushPower;
 
+		//set up push direction for object
+		Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
 
-		// Redundant Code
-		/*
-		if (hit.gameObject.tag == "Box") {
-			// GameObject.FindGameObjectWithTag("Box").transform
-		}
-		if ((player.collisionFlags & CollisionFlags.Sides) != 0) {
-			//print("touched the side");
-			//verticalVelocity = 0;
-		}
-		if (!(player.collisionFlags == CollisionFlags.Below) && hit.controller.detectCollisions) {
-			// print("fly");
-		}
-		//print((character.collisionFlags & CollisionFlags.Below) != 0);
-		//print(hit.controller.detectCollisions);
-		//print(hit.normal.y);
-		//print(character.isGrounded);
-		//print(character.collisionFlags);
-		//Debug.Log(hit.moveDirection);
-		*/
+		//apply push force to object
+		body.velocity = pushForce * pushDirection;
 	}
 
 	// Extra Interaction Stuff Below, Not Touching That
