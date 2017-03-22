@@ -467,10 +467,8 @@ public class CharacterMovement : MonoBehaviour
 		if (hit.normal.y != 1 && hit.controller.detectCollisions) { // 'wall.normal.y != 1' Does this just mean if its not completely flat?
 			animator.SetBool ("Push", true);
 			glideEndurance = 0;
-            print("true");
 		} else {
 			animator.SetBool ("Push", false);
-            print("false");
 		}
 
 		float pushForce = 2.0f;
