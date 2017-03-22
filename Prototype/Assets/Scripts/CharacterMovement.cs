@@ -64,7 +64,7 @@ public class CharacterMovement : MonoBehaviour
 	public float deathSpeed;
 	private bool landed = false;
 	private bool lifted = false;
-	private bool wasGrounded = true;
+	public bool wasGrounded = true;
 	private float oldVelocity = 0f;
 
 	// Glide
@@ -388,7 +388,8 @@ public class CharacterMovement : MonoBehaviour
 			verticalVelocity = 0;
 			animator.SetTrigger ("GlideEnd");
 			animator.SetBool ("Hop", false);
-		}
+            
+        }
 
 		if (verticalVelocity < 0) {
 			//verticalVelocity += jumpSpeed;
@@ -399,7 +400,8 @@ public class CharacterMovement : MonoBehaviour
 			verticalVelocity += jumpSpeed;
 			animator.SetBool ("Hop", true); 
 			glideDelayOn = true;
-		}
+            
+        }
 
 		//verticalVelocity = player.velocity.y;
 		verticalVelocity += playerGravity * Time.deltaTime; // Why is time used here? Works, don't know why. is it because acceleration is ms/^2? Then why not in movement?		
@@ -431,6 +433,7 @@ public class CharacterMovement : MonoBehaviour
 
 		if (!player.isGrounded && player.velocity.y < 0f && glideDelayOn == false && glideEndurance > 0) { // If able to glide:
 			// Drag Equation
+           
 			dragForce = glideStrength * (Mathf.Pow (player.velocity.y, 2) / 2) * Time.deltaTime; 
 			// Caps
 			if (dragForce > -player.velocity.y) { // If the drag force will cause the player to go up, cap it
@@ -442,14 +445,16 @@ public class CharacterMovement : MonoBehaviour
 			if (tempDrag > glideEndurance) { // Dont let the player completely stop their speed if they're falling super fast
 				tempDrag = glideEndurance;
 			}
-				
-			// Apply
-			if (Input.GetButton ("Jump")) {
-				animator.SetTrigger ("GlideStart");
+
+            // Apply
+            if (Input.GetButton("Jump"))
+            {
+                animator.SetTrigger("GlideStart");
                 gliding = true;
-                verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
-				glideEndurance -= tempDrag;
-			}
+                verticalVelocity += Mathf.Pow(tempDrag, 1f / 1.3f);
+                glideEndurance -= tempDrag;
+            }
+            else gliding = false;
 		}
 
 		if (glideEndurance <= 0) {
