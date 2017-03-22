@@ -13,16 +13,24 @@ public class GlowWing : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        glideColor = GameObject.Find("Plume").GetComponent<CharacterMovement>().glideEndurance;
+        
         Renderer renderer = GetComponent<Renderer>();
         Material mat = renderer.material;
 
-       // float emission = Mathf.PingPong(Time.time, 1.0f);
-        Color baseColor = Color.yellow; //Replace this with whatever you want for your base color at emission level '1'
+        // float emission = Mathf.PingPong(Time.time, 1.0f);
+        //Replace this with whatever you want for your base color at emission level '1'
+        Color baseColor = Color.yellow;
+        Color change = baseColor * Mathf.GammaToLinearSpace(glideColor);
 
-        Color finalColor = baseColor * Mathf.LinearToGammaSpace(glideColor);
-
-        mat.SetColor("_EmissionColor", finalColor);
+        
+       if (GameObject.Find("Plume").GetComponent<CharacterMovement>().gliding == true)
+        {
+            
+            glideColor = GameObject.Find("Plume").GetComponent<CharacterMovement>().glideEndurance;
+            mat.SetColor("_Color", change);
+            mat.SetColor("_Color2", change);
+            mat.SetFloat("_Glow", glideColor);
+        }
 
         /*Settings for the glow, main Camera:
          Rendering Path: Deferred

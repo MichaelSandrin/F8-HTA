@@ -77,6 +77,7 @@ public class CharacterMovement : MonoBehaviour
 	private float dragForce;
 	// [1.3 = ~>30high]
 	public float enduranceCurvePower;
+    public bool gliding = false;
 
 	// [Equal to Flat Jump Time]
 	public float glideDelay;
@@ -407,7 +408,7 @@ public class CharacterMovement : MonoBehaviour
 		//character.transform.rotation = Quaternion.Lerp(character.transform.rotation, Quaternion.LookRotation(character.transform.position - previousPosition), Time.deltaTime * characterRotateSpeed);
 	}
 
-	void Glide ()
+    void Glide ()
 	{
 		var animator = gameObject.GetComponent<Animator>();
 
@@ -445,7 +446,8 @@ public class CharacterMovement : MonoBehaviour
 			// Apply
 			if (Input.GetButton ("Jump")) {
 				animator.SetTrigger ("GlideStart");
-				verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
+                gliding = true;
+                verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
 				glideEndurance -= tempDrag;
 			}
 		}
@@ -508,9 +510,9 @@ public class CharacterMovement : MonoBehaviour
 
 	void OnTriggerStay (Collider Col)
 	{
-		//Debug.Log("Entered Trigger");
-
-		if (Col.gameObject.tag == "Ladder") {
+        //Debug.Log("Entered Trigger");
+        var animator = gameObject.GetComponent<Animator>();
+        if (Col.gameObject.tag == "Ladder") {
 			//interaction();
 			if (interact == true) {
 				player.enabled = false;
@@ -519,7 +521,8 @@ public class CharacterMovement : MonoBehaviour
 			//currentLerpTime += Time.deltaTime; 
 		}
 
-		if (Col.gameObject.tag == "Exit") {
+
+        if (Col.gameObject.tag == "Exit") {
 			Application.LoadLevel ("LadderPuzzle");
 		}
 
@@ -531,12 +534,14 @@ public class CharacterMovement : MonoBehaviour
 	// Ladder?
 	void OnTriggerExit (Collider Col)
 	{
-		if (Col.gameObject.tag == "Ladder") {
+
+        if (Col.gameObject.tag == "Ladder") {
 			player.enabled = true;
 			inside = false;
 			interact = false;
 		}
-		/*
+     
+        /*
         if (currentLerpTime == lerpTime)
         {
             currentLerpTime = 0;
@@ -544,7 +549,7 @@ public class CharacterMovement : MonoBehaviour
         {
             currentLerpTime = 0;
         }*/
-	}
+    }
 
 	// Fans?
 	public bool Grounded ()
