@@ -21,15 +21,19 @@ public class GlowWing : MonoBehaviour {
         //Replace this with whatever you want for your base color at emission level '1'
         Color baseColor = Color.yellow;
         Color change = baseColor * Mathf.GammaToLinearSpace(glideColor);
+        bool groundCheck = GameObject.Find("Plume").GetComponent<CharacterMovement>().wasGrounded;
 
-        
-       if (GameObject.Find("Plume").GetComponent<CharacterMovement>().gliding == true)
+
+        if (GameObject.Find("Plume").GetComponent<CharacterMovement>().gliding == true)
         {
-            
+
             glideColor = GameObject.Find("Plume").GetComponent<CharacterMovement>().glideEndurance;
-            mat.SetColor("_Color", change);
-            mat.SetColor("_Color2", change);
-            mat.SetFloat("_Glow", glideColor);
+            // mat.SetColor("_Color", change);
+            // mat.SetColor("_Color2", change);
+            mat.SetFloat("_Glow", glideColor / 4);
+        }
+        if(groundCheck == true) {
+            mat.SetFloat("_Glow", 0);
         }
 
         /*Settings for the glow, main Camera:
