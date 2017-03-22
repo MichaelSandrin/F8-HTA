@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -26,9 +27,10 @@ public class CharacterMovement : MonoBehaviour
 
 	// Player
 	private CharacterController player;
+    public string currentLevel;
 
-	// Camera
-	public Camera playerCamera;
+    // Camera
+    public Camera playerCamera;
 	// Needs "Main Camera" Attached
 	public Transform ChController;
 	// Needs "Plume" (character transfrom) attached to this
@@ -116,9 +118,10 @@ public class CharacterMovement : MonoBehaviour
 	{
 		// Game
 		respawnPoint = GameObject.Find ("SpawnPoint").transform.position;
+        currentLevel = SceneManager.GetActiveScene().name;
 
-		// Character
-		player = GetComponent<CharacterController> ();
+        // Character
+        player = GetComponent<CharacterController> ();
 		player.transform.position = respawnPoint; // Pop the player to the respawnPoint
 
 		// Renderer
