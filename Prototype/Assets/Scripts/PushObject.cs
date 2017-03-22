@@ -7,7 +7,7 @@ public class PushObject : MonoBehaviour
     public float pushPower = 10.0f;
     Vector3 pushDir;
 
-    GameObject other = new GameObject("CubeWithTriggers");
+    //GameObject other = new GameObject("CubeWithTriggers");
     /*
     Rigidbody box = other.GetComponent<Rigidbody>();
 
