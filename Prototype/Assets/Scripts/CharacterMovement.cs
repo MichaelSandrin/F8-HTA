@@ -138,7 +138,7 @@ public class CharacterMovement : MonoBehaviour
 		CalculateCameraDirection ();
 		PlayerInput ();
 		RenderModel ();
-
+        print(player.velocity);
 		// Redundant Code
 		/*
         HAxis = Input.GetAxis("Horizontal");
@@ -473,11 +473,8 @@ public class CharacterMovement : MonoBehaviour
 		Rigidbody body = hit.collider.attachedRigidbody;
 		// Sets the glide timer to 0 if the player hits a wall.
 		if (hit.normal.y != 1 && hit.controller.detectCollisions) { // 'wall.normal.y != 1' Does this just mean if its not completely flat?
-			animator.SetBool ("Push", true);
 			glideEndurance = 0;
-		} else {
-			animator.SetBool ("Push", false);
-		}
+		} 
 
 		float pushForce = 2.0f;
 
@@ -520,23 +517,26 @@ public class CharacterMovement : MonoBehaviour
 	{
         //Debug.Log("Entered Trigger");
         var animator = gameObject.GetComponent<Animator>();
-        if (Col.gameObject.tag == "Ladder") {
-			//interaction();
-			if (interact == true) {
-				player.enabled = false;
-				inside = true;
-			}
-			//currentLerpTime += Time.deltaTime; 
-		}
+        if (Col.gameObject.tag == "Ladder")
+        {
+            //interaction();
+            if (interact == true)
+            {
+                player.enabled = false;
+                inside = true;
+            }
+            //currentLerpTime += Time.deltaTime; 
+        }
 
-
-        if (Col.gameObject.tag == "Exit") {
-			Application.LoadLevel ("LadderPuzzle");
-		}
-
-		if (Col.gameObject.tag == "ExitLevel2") {
-			player.transform.position = respawnPoint;
-		}
+        if(Col.gameObject.tag == "BoxPush" && (Input.GetAxisRaw("Horizontal")!= 0 || Input.GetAxisRaw("Vertical") != 0))
+        {
+            
+            animator.SetBool("Push", true);
+        }
+        else if(Col.gameObject.tag != "BoxPush")
+        {
+            animator.SetBool("Push", false);
+        }
 	}
 
 	// Ladder?

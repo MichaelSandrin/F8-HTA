@@ -25,6 +25,7 @@ TagManager:
   - TriggerLiftA
   - TriggerLiftB
   - ButtonABridge
+  - BoxPush
   layers:
   - Default
   - TransparentFX

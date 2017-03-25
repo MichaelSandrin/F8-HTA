@@ -37,7 +37,7 @@ public class SaveLoadGame : MonoBehaviour
             saveGame();
         }else
         {
-            loadGame();
+            //loadGame();
         }
     }
 }
