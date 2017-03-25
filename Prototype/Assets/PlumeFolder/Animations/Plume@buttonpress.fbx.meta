@@ -87,7 +87,7 @@ ModelImporter:
     400076: transb
     400078: Waist
     400080: Wrist_L
-    7400000: Take 001
+    7400000: buttonpress
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -109,7 +109,125 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: buttonpress
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 17
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.6851064
+        functionName: buttonWallSound
+        data: 
+        objectReferenceParameter: {fileID: 100080, guid: a44832f738d0ace4a83a0d826ec2a702,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: transb
+        weight: 1
+      - path: transb/Obone
+        weight: 1
+      - path: transb/Obone/Hip_B
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_L/Knee_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_L/Knee_L/Ankle_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_L/Knee_L/Ankle_L/Heel_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_L/Knee_L/Ankle_L/Heel_L/Toe_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_R
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_R/Knee_R
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_R/Knee_R/Ankle_R
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_R/Knee_R/Ankle_R/Heel_R
+        weight: 1
+      - path: transb/Obone/Hip_B/Hip_R/Knee_R/Ankle_R/Heel_R/Toe_R
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/NeckB
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/NeckB/HeadB
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Plate_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Plate_R
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HI1
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HI1/H12
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HI1/H12/H13
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HM1
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HM1/HM2
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HM1/HM2/HM3
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HP1
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HP1/HP2
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HP1/HP2/HP3
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HR1
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HR1/HR2
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/HR1/HR2/HR3
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/T1
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/T1/T2
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_L/FArm_L/Elbow_L/Wrist_L/T1/T2/T3
+        weight: 1
+      - path: transb/Obone/Hip_B/Waist/Sternum/ChestB/Shoulder_R
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
