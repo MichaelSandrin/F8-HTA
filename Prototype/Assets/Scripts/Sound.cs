@@ -6,7 +6,7 @@ public class Sound : MonoBehaviour
 {
     private AudioSource audioSource;
     private AudioClip walk;
-    public AudioClip au_idle, au_walk;
+    public AudioClip au_idle, au_walk, au_jumpLand, au_buttonWall, au_wingFlap;
 
     void Start()
     {
@@ -27,5 +27,17 @@ public class Sound : MonoBehaviour
     void walkSound()
     {
         audioSource.PlayOneShot(au_walk);
+    }
+    void landSound()
+    {
+        audioSource.PlayOneShot(au_jumpLand);
+    }
+    void buttonWallSound()
+    {
+        audioSource.PlayOneShot(au_buttonWall);
+    }
+    void wingFlapSound()
+    {
+        audioSource.PlayOneShot(au_wingFlap);
     }
 }

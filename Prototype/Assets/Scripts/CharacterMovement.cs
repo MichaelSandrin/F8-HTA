@@ -215,13 +215,16 @@ public class CharacterMovement : MonoBehaviour
 		} else {
 			landed = false;
 		}
-			
-		if ((oldVelocity <= -deathSpeed && landed == true) || Input.GetKey ("k")) {
+
+        
+        if ((oldVelocity <= -deathSpeed && landed == true) || Input.GetKey ("k")) {
 			player.transform.position = respawnPoint;
 		}
-			
-		wasGrounded = player.isGrounded;
-		oldVelocity = player.velocity.y;
+        print(oldVelocity);
+        oldVelocity = player.velocity.y;
+        wasGrounded = player.isGrounded;
+		
+        
 	}
 
 	// Movement Functions
@@ -499,12 +502,18 @@ public class CharacterMovement : MonoBehaviour
 	void Climb ()
 	{
 		// If inside the ladder and pressing foward - climb. Foward overrides backward.
-		if (inside == true && (Input.GetKey ("w") || Input.GetAxis ("X360_LStickY") < 0)) {
+		if ((inside == true && (Input.GetKey ("w")) || (inside == true && Input.GetAxis ("X360_LStickY") < 0))) {
 			ChController.transform.position += (Vector3.up * climbSpeed) * Time.deltaTime;
-		} else if (inside == true && (Input.GetKey ("s") || Input.GetAxis ("X360_LStickY") > 0)) {
+		} else if ((inside == true && (Input.GetKey ("s")) ||(inside == true && Input.GetAxis ("X360_LStickY") > 0))) {
 			ChController.transform.position += (Vector3.down * climbSpeed) * Time.deltaTime;
 		}
-	}
+     /*   else if ((inside == true && (Input.GetKey("f")) || (inside == true && Input.GetKey("joystick button 2")))) {
+            player.enabled = true;
+            inside = false;
+        }*/
+    } 
+	
+    
 
 	void Interaction ()
 	{

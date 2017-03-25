@@ -134,7 +134,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.15609756
+      - time: 0
         functionName: walkSound
         data: 
         objectReferenceParameter: {fileID: 100080, guid: a44832f738d0ace4a83a0d826ec2a702,
@@ -142,7 +142,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.60489863
+      - time: 0.49159816
         functionName: walkSound
         data: 
         objectReferenceParameter: {fileID: 100080, guid: a44832f738d0ace4a83a0d826ec2a702,
