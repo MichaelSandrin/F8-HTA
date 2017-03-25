@@ -24,13 +24,14 @@ public class CharacterMovement : MonoBehaviour
 
 	// Game
 	private Vector3 respawnPoint;
+	public int spawnNumber = 0;
 
 	// Player
 	private CharacterController player;
-    public string currentLevel;
+	public string currentLevel;
 
-    // Camera
-    public Camera playerCamera;
+	// Camera
+	public Camera playerCamera;
 	// Needs "Main Camera" Attached
 	public Transform ChController;
 	// Needs "Plume" (character transfrom) attached to this
@@ -79,7 +80,7 @@ public class CharacterMovement : MonoBehaviour
 	private float dragForce;
 	// [1.3 = ~>30high]
 	public float enduranceCurvePower;
-    public bool gliding = false;
+	public bool gliding = false;
 
 	// [Equal to Flat Jump Time]
 	public float glideDelay;
@@ -117,11 +118,11 @@ public class CharacterMovement : MonoBehaviour
 	void Start ()
 	{
 		// Game
-		respawnPoint = GameObject.Find ("SpawnPoint").transform.position;
-        currentLevel = SceneManager.GetActiveScene().name;
+		respawnPoint = GameObject.Find ("SpawnPoint " + spawnNumber).transform.position;
+		currentLevel = SceneManager.GetActiveScene ().name;
 
-        // Character
-        player = GetComponent<CharacterController> ();
+		// Character
+		player = GetComponent<CharacterController> ();
 		player.transform.position = respawnPoint; // Pop the player to the respawnPoint
 
 		// Renderer
@@ -227,7 +228,7 @@ public class CharacterMovement : MonoBehaviour
 	// Movement Functions
 	void Walk ()
 	{
-		var animator = gameObject.GetComponent<Animator>();
+		var animator = gameObject.GetComponent<Animator> ();
 
 		// Get the player velocity and convert it to a velocity relative to the camera.
 		relativeVelocity = GetFlatVelocity ();
@@ -384,7 +385,7 @@ public class CharacterMovement : MonoBehaviour
 	void Jump ()
 	{ // Do I reset horizontal velocities or do I free vertical velocity?
 
-		var animator = gameObject.GetComponent<Animator>();
+		var animator = gameObject.GetComponent<Animator> ();
 
 
 		if (player.isGrounded) {
@@ -392,7 +393,7 @@ public class CharacterMovement : MonoBehaviour
 			animator.SetTrigger ("GlideEnd");
 			animator.SetBool ("Hop", false);
             
-        }
+		}
 
 		if (verticalVelocity < 0) {
 			//verticalVelocity += jumpSpeed;
@@ -404,7 +405,7 @@ public class CharacterMovement : MonoBehaviour
 			animator.SetBool ("Hop", true); 
 			glideDelayOn = true;
             
-        }
+		}
 
 		//verticalVelocity = player.velocity.y;
 		verticalVelocity += playerGravity * Time.deltaTime; // Why is time used here? Works, don't know why. is it because acceleration is ms/^2? Then why not in movement?		
@@ -413,9 +414,9 @@ public class CharacterMovement : MonoBehaviour
 		//character.transform.rotation = Quaternion.Lerp(character.transform.rotation, Quaternion.LookRotation(character.transform.position - previousPosition), Time.deltaTime * characterRotateSpeed);
 	}
 
-    void Glide ()
+	void Glide ()
 	{
-		var animator = gameObject.GetComponent<Animator>();
+		var animator = gameObject.GetComponent<Animator> ();
 
 		// Reset Glide
 		if (player.isGrounded) { // When the player touches the ground: reset the glide resource
@@ -449,15 +450,14 @@ public class CharacterMovement : MonoBehaviour
 				tempDrag = glideEndurance;
 			}
 
-            // Apply
-            if (Input.GetButton("Jump"))
-            {
-                animator.SetTrigger("GlideStart");
-                gliding = true;
-                verticalVelocity += Mathf.Pow(tempDrag, 1f / 1.3f);
-                glideEndurance -= tempDrag;
-            }
-            else gliding = false;
+			// Apply
+			if (Input.GetButton ("Jump")) {
+				animator.SetTrigger ("GlideStart");
+				gliding = true;
+				verticalVelocity += Mathf.Pow (tempDrag, 1f / 1.3f);
+				glideEndurance -= tempDrag;
+			} else
+				gliding = false;
 		}
 
 		if (glideEndurance <= 0) {
@@ -468,7 +468,7 @@ public class CharacterMovement : MonoBehaviour
 	// Boxes?
 	void OnControllerColliderHit (ControllerColliderHit hit)
 	{
-		var animator = gameObject.GetComponent<Animator>();
+		var animator = gameObject.GetComponent<Animator> ();
 
 		Rigidbody body = hit.collider.attachedRigidbody;
 		// Sets the glide timer to 0 if the player hits a wall.
@@ -489,7 +489,7 @@ public class CharacterMovement : MonoBehaviour
 			return;
 
 		//set up push direction for object
-		Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+		Vector3 pushDirection = new Vector3 (hit.moveDirection.x, 0, hit.moveDirection.z);
 
 		//apply push force to object
 		body.velocity = pushForce * pushDirection;
@@ -518,9 +518,9 @@ public class CharacterMovement : MonoBehaviour
 
 	void OnTriggerStay (Collider Col)
 	{
-        //Debug.Log("Entered Trigger");
-        var animator = gameObject.GetComponent<Animator>();
-        if (Col.gameObject.tag == "Ladder") {
+		//Debug.Log("Entered Trigger");
+		var animator = gameObject.GetComponent<Animator> ();
+		if (Col.gameObject.tag == "Ladder") {
 			//interaction();
 			if (interact == true) {
 				player.enabled = false;
@@ -530,7 +530,7 @@ public class CharacterMovement : MonoBehaviour
 		}
 
 
-        if (Col.gameObject.tag == "Exit") {
+		if (Col.gameObject.tag == "Exit") {
 			Application.LoadLevel ("LadderPuzzle");
 		}
 
@@ -543,13 +543,13 @@ public class CharacterMovement : MonoBehaviour
 	void OnTriggerExit (Collider Col)
 	{
 
-        if (Col.gameObject.tag == "Ladder") {
+		if (Col.gameObject.tag == "Ladder") {
 			player.enabled = true;
 			inside = false;
 			interact = false;
 		}
      
-        /*
+		/*
         if (currentLerpTime == lerpTime)
         {
             currentLerpTime = 0;
@@ -557,7 +557,7 @@ public class CharacterMovement : MonoBehaviour
         {
             currentLerpTime = 0;
         }*/
-    }
+	}
 
 	// Fans?
 	public bool Grounded ()
