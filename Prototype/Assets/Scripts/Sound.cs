@@ -28,21 +28,21 @@ public class Sound : MonoBehaviour
     void walkSound()
     {
         audioSource.PlayOneShot(au_walk);
-        audioSource.volume = .15f;
+        audioSource.volume = .09f;
     }
     void landSound()
     {
         audioSource.PlayOneShot(au_jumpLand);
-        audioSource.volume = .5f;
+        audioSource.volume = .125f;
     }
     void buttonWallSound()
     {
         audioSource.PlayOneShot(au_buttonWall);
-        audioSource.volume = .8f;
+        audioSource.volume = .2f;
     }
     void wingFlapSound()
     {
         audioSource.PlayOneShot(au_wingFlap);
-        audioSource.volume = 1;
+        audioSource.volume = .3f;
     }
 }
