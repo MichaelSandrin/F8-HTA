@@ -67,7 +67,7 @@ public class CharacterMovement : MonoBehaviour
 	private bool landed = false;
 	private bool lifted = false;
 	public bool wasGrounded = true;
-	private float oldVelocity = 0f;
+	public float oldVelocity = 0f;
 
 	// Glide
 	// These values are super finicky, don't touch anything in here.
@@ -128,6 +128,7 @@ public class CharacterMovement : MonoBehaviour
 		characterRenderer = GetComponent<Renderer> ();
 		characterRenderer.enabled = true;
 
+        
 		//material[0] = new Color(255, 108, 106, 1);
 		//rend.sharedMaterial = material[0];
 		//Physics.gravity = new Vector3(0, -100F, 0);
@@ -138,7 +139,7 @@ public class CharacterMovement : MonoBehaviour
 		CalculateCameraDirection ();
 		PlayerInput ();
 		RenderModel ();
-        print(player.velocity);
+        print(player.velocity.y);
 		// Redundant Code
 		/*
         HAxis = Input.GetAxis("Horizontal");
@@ -399,6 +400,11 @@ public class CharacterMovement : MonoBehaviour
 			animator.SetBool ("Hop", true); 
 		}
 
+        if(verticalVelocity < 0 && inside == true)
+        {
+            verticalVelocity = 0;
+        }
+
 		if (Input.GetButton ("Jump") && player.isGrounded) {
 			verticalVelocity += jumpSpeed;
 			animator.SetBool ("Hop", true); 
@@ -500,7 +506,30 @@ public class CharacterMovement : MonoBehaviour
 			ChController.transform.position += (Vector3.up * climbSpeed) * Time.deltaTime;
 		} else if (inside == true && (Input.GetKey ("s") || Input.GetAxis ("X360_LStickY") > 0)) {
 			ChController.transform.position += (Vector3.down * climbSpeed) * Time.deltaTime;
-		}
+		}else if (inside == true && (Input.GetKey("d") || Input.GetAxis("X360_LStickY") > 0))
+        {
+
+            ChController.transform.position += (Vector3.forward * climbSpeed) * Time.deltaTime;
+        }
+        else if (inside == true && (Input.GetKey("a") || Input.GetAxis("X360_LStickY") > 0))
+        {
+            ChController.transform.position += (Vector3.back * climbSpeed) * Time.deltaTime;
+
+        }
+        else if (Input.GetButton("Jump") && inside == true)
+        {
+            player.enabled = true;
+            inside = false;
+            interact = false;
+            oldVelocity = 0;
+            playerGravity = 0;
+
+
+        }
+        else
+        {
+            playerGravity = -9.80f;
+        }
 	}
 
 	void Interaction ()
@@ -528,12 +557,12 @@ public class CharacterMovement : MonoBehaviour
             //currentLerpTime += Time.deltaTime; 
         }
 
-        if(Col.gameObject.tag == "BoxPush" && (Input.GetAxisRaw("Horizontal")!= 0 || Input.GetAxisRaw("Vertical") != 0))
+        if(Col.gameObject.tag == "BoxPush" && ((Input.GetAxisRaw("Horizontal")!= 0 || Input.GetAxisRaw("Vertical") != 0)))
         {
-            
+            print("Push");
             animator.SetBool("Push", true);
         }
-        else if(Col.gameObject.tag != "BoxPush")
+        else if(Col.gameObject.tag != "BoxPush" && ((Input.GetAxisRaw("Horizontal") == 0 || Input.GetAxisRaw("Vertical") == 0)))
         {
             animator.SetBool("Push", false);
         }
@@ -542,13 +571,20 @@ public class CharacterMovement : MonoBehaviour
 	// Ladder?
 	void OnTriggerExit (Collider Col)
 	{
-
+        var animator = gameObject.GetComponent<Animator>();
         if (Col.gameObject.tag == "Ladder") {
 			player.enabled = true;
 			inside = false;
 			interact = false;
-		}
-     
+            oldVelocity = 0;
+
+        }
+        if(Col.gameObject.tag == "BoxPush")
+        {
+            animator.SetBool("Push", false);
+        }
+        
+
         /*
         if (currentLerpTime == lerpTime)
         {
