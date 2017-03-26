@@ -8,9 +8,11 @@ public class CameraMovement : MonoBehaviour
 	public CharacterController player;
 	// Needs "Plume" assigned in inspector.
 	private Transform playerTransform;
+    [SerializeField]
+    private Transform target = null;
 
-	// Camera
-	public Camera playerCamera;
+    // Camera
+    public Camera playerCamera;
 	// Needs "Main Camera" assigned in inspector.
 	private Transform cameraTransform;
 
@@ -19,9 +21,9 @@ public class CameraMovement : MonoBehaviour
 	public float inputY = 0f;
 
 	// Angle Constraints
-	public const float Y_ANGLE_MIN = -70f;
+	public const float Y_ANGLE_MIN = -60f;
 	//-89.9 keeps the camera from flipping over the vertical axis.
-	public const float Y_ANGLE_MAX = 70f;
+	public const float Y_ANGLE_MAX = -1f;
 
 	// Camera Placement
 	// Leave at -20
@@ -30,10 +32,12 @@ public class CameraMovement : MonoBehaviour
 	public float distance = 4f;
 	// Depending on the character's origin
 	public Vector3 offset = new Vector3 (0f, 1.25f, 0f);
+    public float DistanceToPlayer = 5.0f;
+  
 
 
-	// Redundant Code
-	/*
+    // Redundant Code
+    /*
 	public Transform player;
 	public float cameraSpeed = 15;
 	public float zoomSpeed = 20;
@@ -49,8 +53,9 @@ public class CameraMovement : MonoBehaviour
 	float RStickY;
 	*/
 
-	void Start ()
+    void Start ()
 	{
+
 		// Character
 		playerTransform = player.transform; // Despite being in Start(), characterTransform stays updated with the character's current transform values. Works, but don't know how.
 
@@ -62,8 +67,9 @@ public class CameraMovement : MonoBehaviour
 
 	void Update ()
 	{
-		// Mouse Input
-		inputX += Input.GetAxis ("Mouse X");
+       
+        // Mouse Input
+        inputX += Input.GetAxis ("Mouse X");
 		inputY += Input.GetAxis ("Mouse Y");
 
 		// Controller Input
@@ -124,6 +130,8 @@ public class CameraMovement : MonoBehaviour
 
 		// Where is cameraTransform ever applied to the actual main camera?
 	}
+
+  
 
 	// Redundant Code
 	/*
