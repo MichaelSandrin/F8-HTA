@@ -84,7 +84,7 @@ Material:
     - first:
         name: _RimLightSampler
       second:
-        m_Texture: {fileID: 2800000, guid: 23d1d26f512435a4ba9add90759d8670, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -114,7 +114,7 @@ Material:
       second: 0.5
     - first:
         name: _Glow
-      second: 1
+      second: 0
     - first:
         name: _Metallic
       second: 0
@@ -148,7 +148,7 @@ Material:
       second: {r: 0.76862746, g: 0.76862746, b: 0.76862746, a: 1}
     - first:
         name: _Color2
-      second: {r: 0.9558824, g: 0.57352936, b: 0, a: 0.459}
+      second: {r: 1, g: 1, b: 1, a: 0.459}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
