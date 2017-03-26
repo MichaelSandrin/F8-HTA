@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void StartGame() {
-        Application.LoadLevel("Moving Platform Level");
+        Application.LoadLevel("Level 01");
     }
 
     public void Quit() {
