@@ -31,7 +31,7 @@ public class SceneTransition : MonoBehaviour {
 
     //OnLevelWasLoaded is called when a level is loaded. It takes loaded level index (int) as a parameter so you can limit the fade in to certain scenes
 	void OnLevelWasLoaded() {
-        //Alpha = 1;        //Use this if the alpha is not set to 1 by default
+        //Alpha = 1;        //Use this if the alpha is not set to 1 by default  
 		BeginFade(-1);
 	}
 }

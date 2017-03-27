@@ -1,10 +1,11 @@
 fileFormatVersion: 2
 guid: 023d36f218f80a644b83e8753007842b
-timeCreated: 1489278070
+timeCreated: 1490601172
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - movie: {fileID: 15200000, guid: a606b4862c3c4ec4aad19dd958107393, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

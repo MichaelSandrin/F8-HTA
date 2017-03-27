@@ -27,7 +27,7 @@ public class CharacterMovement : MonoBehaviour
 
 	// Player
 	private CharacterController player;
-    public string currentLevel;
+    public string currentLevel = "";
 
     // Camera
     public Camera playerCamera;
