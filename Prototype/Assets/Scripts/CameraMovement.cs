@@ -9,6 +9,8 @@ public class CameraMovement : MonoBehaviour
 	// Needs "Plume" assigned in inspector.
 	private Transform playerTransform;
 
+    public LayerMask wallCollide;
+
 	// Camera
 	public Camera playerCamera;
 	// Needs "Main Camera" assigned in inspector.
@@ -30,10 +32,11 @@ public class CameraMovement : MonoBehaviour
 	public float distance = 4f;
 	// Depending on the character's origin
 	public Vector3 offset = new Vector3 (0f, 1.25f, 0f);
+    private Rigidbody rb;
 
 
-	// Redundant Code
-	/*
+    // Redundant Code
+    /*
 	public Transform player;
 	public float cameraSpeed = 15;
 	public float zoomSpeed = 20;
@@ -49,13 +52,13 @@ public class CameraMovement : MonoBehaviour
 	float RStickY;
 	*/
 
-	void Start ()
+    void Start ()
 	{
 		// Character
 		playerTransform = player.transform; // Despite being in Start(), characterTransform stays updated with the character's current transform values. Works, but don't know how.
-
-		// Camera
-		cameraTransform = playerCamera.transform;
+        rb = GetComponent<Rigidbody>();
+        // Camera
+        cameraTransform = playerCamera.transform;
 		inputY += startingHeight;
 		//PlayerCamera = GetComponent<Camera>();
 	}
@@ -110,6 +113,7 @@ public class CameraMovement : MonoBehaviour
 
 	void LateUpdate ()
 	{
+
 		// Default camera distance and height.
 		Vector3 direction = new Vector3 (0, 0, distance); // This needs to be in LateUpdate() for some reason. Works, don't know how.
 
@@ -118,15 +122,14 @@ public class CameraMovement : MonoBehaviour
 
 		// Sets camera position using charactetr postion + rotated vector.
 		cameraTransform.position = playerTransform.position + (rotation * direction); // Multiplying Quaternion rotation by Vector3 direction effectively rotates the vector
-
-		// Sets the camera to look at the player's position.
-		cameraTransform.LookAt (playerTransform.position + offset);
+        // Sets the camera to look at the player's position.
+        cameraTransform.LookAt (playerTransform.position + offset);
 
 		// Where is cameraTransform ever applied to the actual main camera?
 	}
 
-	// Redundant Code
-	/*
+    // Redundant Code
+    /*
     void CameraZoom() {
         playerCamera.fieldOfView -= zoomSpeed / 4;
 
@@ -135,4 +138,5 @@ public class CameraMovement : MonoBehaviour
         }
     }
     */
+    
 }
