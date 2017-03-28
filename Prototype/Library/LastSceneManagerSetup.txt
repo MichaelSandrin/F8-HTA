@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scenes/Level1/Level 01(medit2).unity
-  isLoaded: 1
-  isActive: 1
