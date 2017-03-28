@@ -27,7 +27,7 @@ public class CharacterMovement : MonoBehaviour
 
     // Player
     private CharacterController player;
-    public string currentLevel;
+    public string currentLevel = "";
 
     // Camera
     public Camera playerCamera;
@@ -422,6 +422,11 @@ public class CharacterMovement : MonoBehaviour
             animator.SetBool("Hop", true);
         }
 
+        if (verticalVelocity < 0 && inside == true)
+        {
+            verticalVelocity = 0;
+        }
+
         if (Input.GetButton("Jump") && player.isGrounded)
         {
             verticalVelocity += jumpSpeed;
@@ -541,6 +546,30 @@ public class CharacterMovement : MonoBehaviour
         {
             ChController.transform.position += (Vector3.down * climbSpeed) * Time.deltaTime;
         }
+        else if (inside == true && (Input.GetKey("d") || Input.GetAxis("X360_LStickY") > 0))
+        {
+
+            ChController.transform.position += (Vector3.forward * climbSpeed) * Time.deltaTime;
+        }
+        else if (inside == true && (Input.GetKey("a") || Input.GetAxis("X360_LStickY") > 0))
+        {
+            ChController.transform.position += (Vector3.back * climbSpeed) * Time.deltaTime;
+
+        }
+        else if (Input.GetButton("Jump") && inside == true)
+        {
+            player.enabled = true;
+            inside = false;
+            interact = false;
+            oldVelocity = 0;
+            playerGravity = 0;
+
+
+        }
+        else
+        {
+            playerGravity = -9.80f;
+        }
     }
 
     void Interaction()
@@ -572,26 +601,32 @@ public class CharacterMovement : MonoBehaviour
         }
 
 
-        if (Col.gameObject.tag == "Exit")
+        if (Col.gameObject.tag == "BoxPush" && ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)))
         {
-            Application.LoadLevel("LadderPuzzle");
+            print("Push");
+            animator.SetBool("Push", true);
         }
-
-        if (Col.gameObject.tag == "ExitLevel2")
+        else if (Col.gameObject.tag != "BoxPush" && ((Input.GetAxisRaw("Horizontal") == 0 || Input.GetAxisRaw("Vertical") == 0)))
         {
-            player.transform.position = respawnPoint;
+            animator.SetBool("Push", false);
         }
     }
 
     // Ladder?
     void OnTriggerExit(Collider Col)
     {
-
+        var animator = gameObject.GetComponent<Animator>();
         if (Col.gameObject.tag == "Ladder")
         {
             player.enabled = true;
             inside = false;
             interact = false;
+            oldVelocity = 0;
+        }
+
+        if (Col.gameObject.tag == "BoxPush")
+        {
+            animator.SetBool("Push", false);
         }
 
         /*
