@@ -57,6 +57,7 @@ public class CameraMovement : MonoBehaviour
 
     void Start()
     {
+       
         // Character
         playerTransform = player.transform; // Despite being in Start(), characterTransform stays updated with the character's current transform values. Works, but don't know how.
         rb = GetComponent<Rigidbody>();
@@ -69,7 +70,7 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        isPlayerLookedAt();
+        //isPlayerLookedAt();
         // Mouse Input
         inputX += Input.GetAxis("Mouse X");
         inputY += Input.GetAxis("Mouse Y");
@@ -132,12 +133,12 @@ public class CameraMovement : MonoBehaviour
             cameraTransform.LookAt(playerTransform.position + offset); //+ offset
         }
 
-        else if (isLookingAtPlayer == false)
+        else if (isLookingAtPlayer == true)
         {
             Vector3 direction = new Vector3(0, 0, distance);
             //Quaternion rotation = Quaternion.Euler(-wantedPosition.y, -wantedPosition.x, 0);
             //cameraTransform.position = playerTransform.position + (rotation * direction);
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, playerTransform.position + Vector3.up * distance, Time.deltaTime); //playerTransform.position + Vector3.up*5
+            cameraTransform.position = Vector3.Lerp(cameraTransform.position, .9f*wantedPosition + Vector3.up * distance, Time.deltaTime); //playerTransform.position + Vector3.up*5
             cameraTransform.LookAt(playerTransform.position + offset); //+ offset
 
 
@@ -161,21 +162,22 @@ public class CameraMovement : MonoBehaviour
     {
         RaycastHit test;
         Ray rayTest = Camera.main.ViewportPointToRay(Vector3.one * 0.5f - Vector3.forward * 0.5f);
-        Debug.DrawRay(rayTest.origin, rayTest.direction, Color.red);
+        //Debug.DrawRay(rayTest.origin, rayTest.direction, Color.red);
         if (Physics.Raycast(rayTest, out test, 500.0f))
         {
             // Debug.LogWarning(test.collider.name);
         }
 
         RaycastHit hit;
-        Ray ray = new Ray(transform.position, transform.forward);
-        Debug.DrawRay(transform.position, transform.forward, Color.yellow);
+        Ray ray = new Ray(transform.position, playerTransform.position - transform.position);
+        Debug.DrawRay(transform.position, playerTransform.position - transform.position, Color.yellow);
         RaycastHit hitCam;
-        Ray rayToCam = new Ray(playerTransform.position, cameraTransform.position);
-        Debug.DrawRay(playerTransform.position, cameraTransform.position, Color.cyan);
+        Ray rayToCam = new Ray(playerTransform.position, transform.position -playerTransform.position);
+        Debug.DrawRay(playerTransform.position, transform.position - playerTransform.position, Color.cyan);
         if (Physics.Raycast(ray, out hit) && Physics.Raycast(rayToCam, out hitCam))
         {
-            Debug.LogWarning(test.collider.name);
+            //Debug.LogWarning(hit.collider.name);
+            Debug.Log(transform.position);
             //isLookingAtPlayer = (hit.collider.gameObject.layer == playerLayer);
             if ((hit.collider.gameObject.layer == playerLayer
                 || hit.collider.gameObject.tag == "Player"
@@ -187,7 +189,7 @@ public class CameraMovement : MonoBehaviour
 
             else
             {
-                isLookingAtPlayer = true;
+                isLookingAtPlayer = false;
                 wantedPosition = hit.point;
 
             }
