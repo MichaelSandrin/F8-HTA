@@ -5315,11 +5315,6 @@ GameObject:
   m_PrefabParentObject: {fileID: 1549045607966416, guid: 53e146ab1ea6277459704e9edc5e0353,
     type: 2}
   m_PrefabInternal: {fileID: 1153743044}
---- !u!4 &164727416 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4008615454728510, guid: 53e146ab1ea6277459704e9edc5e0353,
-    type: 2}
-  m_PrefabInternal: {fileID: 1153743044}
 --- !u!114 &164727422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14446,28 +14441,6 @@ Skybox:
   m_GameObject: {fileID: 457005929}
   m_Enabled: 1
   m_CustomSkybox: {fileID: 2100000, guid: 617d9be015db68348a623b01ea51a8c5, type: 2}
---- !u!114 &457005937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 457005929}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7d79aa0366336848b3cea482a5c672d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 164727416}
-  distance: 5
-  height: 1
-  damping: 5
-  smoothRotation: 1
-  rotationDamping: 10
-  targetLookAtOffset: {x: 0, y: 0, z: 0}
-  bumperDistanceCheck: 5
-  bumperCameraHeight: 1
-  bumperRayOffset: {x: 0, y: 0, z: 0}
-  cameraZ: {fileID: 1063295222}
 --- !u!135 &457005938
 SphereCollider:
   m_ObjectHideFlags: 0
