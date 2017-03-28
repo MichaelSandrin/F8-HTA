@@ -43,21 +43,31 @@ public class SmoothCameraWithBumper : MonoBehaviour
         Vector3 wantedPosition = target.TransformPoint(0, height, -distance);
 
         // check to see if there is anything behind the target
-        RaycastHit[] hits; // store object the raycast hits in an array called hits
+        //  RaycastHit[] hits; // store object the raycast hits in an array called hits
+        RaycastHit hit;
+        //Vector3 back = target.transform.TransformDirection(-1 * Vector3.forward);
 
-        Vector3 back = target.transform.TransformDirection(-1 * Vector3.forward);
-
-        hits = Physics.RaycastAll(transform.position, transform.forward, distance);
+        //hits = Physics.RaycastAll(transform.position, transform.forward, distance);
         // cast the bumper ray out from rear and check to see if there is anything behind
-        foreach (RaycastHit hit in hits)
-        {
-            if(hit.transform != target)
+        //foreach (RaycastHit hit in hits)
+        //{
+        Ray ray = new Ray(transform.position, transform.forward);
+        if (Physics.Raycast(ray, out hit, distance))
             {
-                // clamp wanted position to hit position
+            if (hit.collider.gameObject != target)
+            {// clamp wanted position to hit position
                 wantedPosition.x = hit.point.x;
                 wantedPosition.z = hit.point.z;
                 wantedPosition.y = Mathf.Lerp(hit.point.y + bumperCameraHeight, wantedPosition.y, Time.deltaTime * damping);
-                Debug.Log(hit);
+                //Debug.Log(hit);
+                GetComponent<CameraMovement>().isLookingAtPlayer = false;
+            }
+            
+
+            else {
+                GetComponent<CameraMovement>().isLookingAtPlayer = true;
+            }
+            Debug.Log(Time.realtimeSinceStartup + GetComponent<CameraMovement>().isLookingAtPlayer.ToString());
             }
 
             transform.position = Vector3.Lerp(transform.position, wantedPosition, Time.deltaTime * damping);
@@ -72,5 +82,5 @@ public class SmoothCameraWithBumper : MonoBehaviour
             else
                 transform.rotation = Quaternion.LookRotation(lookPosition - transform.position, target.up);
         }
-    }
+   // }
 }
