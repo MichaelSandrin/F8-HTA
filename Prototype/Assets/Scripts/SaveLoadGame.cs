@@ -12,7 +12,18 @@ public class SaveLoadGame : MonoBehaviour
     public void loadGame()
     {
         level = SaveLoadManager.Load();
-        Application.LoadLevel(level);
+        if(level == "Level 01(medit2)")
+        {
+            Application.LoadLevel("VideoTransition");
+        }
+        else if(level == "Level 02")
+        {
+            Application.LoadLevel("VideoTransition");
+        }else
+        {
+
+        }
+       // Application.LoadLevel(level);
     }
 
 
@@ -32,7 +43,7 @@ public class SaveLoadGame : MonoBehaviour
     {
      
 
-        if (Col.gameObject.tag == "Player" && level != "SaveRoom")
+        if (Col.gameObject.tag == "Player" && GameObject.Find("Plume").GetComponent<CharacterMovement>().currentLevel != "SaveRoom")
         {
             saveGame();
         }else

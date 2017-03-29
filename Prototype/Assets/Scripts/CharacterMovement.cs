@@ -117,7 +117,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         // Game
-        respawnPoint = GameObject.Find("SpawnPoint").transform.position;
+        respawnPoint = GameObject.Find("SpawnPoint 3").transform.position;
         currentLevel = SceneManager.GetActiveScene().name;
 
         // Character
@@ -510,7 +510,7 @@ public class CharacterMovement : MonoBehaviour
         // Sets the glide timer to 0 if the player hits a wall.
         if (hit.normal.y != 1 && hit.controller.detectCollisions)
         { // 'wall.normal.y != 1' Does this just mean if its not completely flat?
-            animator.SetBool("Push", true);
+            //animator.SetBool("Push", true);
             glideEndurance = 0;
         }
         else
@@ -613,13 +613,10 @@ public class CharacterMovement : MonoBehaviour
 
         if (Col.gameObject.tag == "Exit")
         {
-            Application.LoadLevel("LadderPuzzle");
+            //Application.LoadLevel("SaveRoom");
         }
 
-        if (Col.gameObject.tag == "ExitLevel2")
-        {
-            player.transform.position = respawnPoint;
-        }
+      
     }
 
     // Ladder?

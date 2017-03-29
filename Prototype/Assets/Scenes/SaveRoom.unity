@@ -587,6 +587,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1107193672182870, guid: ef7bc400e1cb2c84b86ba75b158df99b, type: 2}
+      propertyPath: m_Name
+      value: SpawnPoint 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ef7bc400e1cb2c84b86ba75b158df99b, type: 2}
   m_IsPrefabParent: 0
@@ -750,6 +754,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 594291883}
+  isLookingAtPlayer: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   playerCamera: {fileID: 1382915017}
   inputX: 0
   inputY: 0

@@ -25,6 +25,12 @@ TagManager:
   - TriggerLiftA
   - TriggerLiftB
   - ButtonABridge
+  - GateA
+  - TriggerA
+  - TriggerB
+  - BoxPush
+  - GateB
+  - TriggerPFoward
   layers:
   - Default
   - TransparentFX

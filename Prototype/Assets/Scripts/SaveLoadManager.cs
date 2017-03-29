@@ -23,7 +23,7 @@ public static class SaveLoadManager
     public static string Load()
     {
         
-        if (File.Exists(Application.persistentDataPath + "/savedGames.gd"))
+        if (File.Exists(Application.persistentDataPath + "/savedGames.txt"))
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = new FileStream(Application.persistentDataPath + "/savedGames.txt", FileMode.Open);
@@ -41,12 +41,17 @@ public static class SaveLoadManager
 [System.Serializable]
 public class Game
 {
-    public string lastLevel;
+    public string lastLevel ="zero";
  
 
     public Game(string scene)
     {
         this.lastLevel = scene;
+    }
+
+    public string getLastLevel() {
+
+        return lastLevel;
     }
 
 }

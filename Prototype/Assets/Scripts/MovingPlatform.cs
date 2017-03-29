@@ -12,8 +12,10 @@ public class MovingPlatform : MonoBehaviour {
 	public float pusherCurrentLerpTime = 0;
 	private float pusherLerpTime = 1f;
 
+    /*
 	public float pusherBCurrentLerpTime = 0;
 	private float pusherBLerpTime = 3f;
+    */
 
 	public float SeqACurrentLerpTime = 0;
 	private float seqALerpTime = 1f;
@@ -59,11 +61,13 @@ public class MovingPlatform : MonoBehaviour {
 	public Vector3 pusherNP2;
 	public Vector3 pusherCP;
 
+    /*
 	GameObject pusherB;
 	public Vector3 pusherBOP;
 	public Vector3 pusherBNP;
 	public Vector3 pusherBNP2;
 	public Vector3 pusherBCP;
+    */
 
 	GameObject pusherC;
 	public Vector3 pusherCOP;
@@ -113,11 +117,13 @@ public class MovingPlatform : MonoBehaviour {
 	public Vector3 pusherJNP2;
 	public Vector3 pusherJCP;
 
+    /*
 	GameObject pusherK;
 	public Vector3 pusherKOP;
 	public Vector3 pusherKNP;
 	public Vector3 pusherKNP2;
 	public Vector3 pusherKCP;
+    */
 
 	GameObject pusherL;
 	public Vector3 pusherLOP;
@@ -193,9 +199,11 @@ public class MovingPlatform : MonoBehaviour {
 		pusherNP = pusher.transform.position + -Vector3.forward * 9f;
 		pusherNP2 = pusher.transform.position + Vector3.forward * 8f;
 
+        /*
 		pusherB = GameObject.Find("PusherB");
 		pusherBOP = GameObject.Find("PusherB").transform.position;
 		pusherBNP = pusherB.transform.position + Vector3.forward * 40f;
+        */
 
 		pusherC = GameObject.Find("PusherC");
 		pusherCOP = GameObject.Find("PusherC").transform.position;
@@ -229,9 +237,11 @@ public class MovingPlatform : MonoBehaviour {
 		pusherJOP = GameObject.Find("PusherJ").transform.position;
 		pusherJNP = pusherJ.transform.position + Vector3.back * 11f;
 
+        /*
 		pusherK = GameObject.Find("PusherK");
 		pusherKOP = GameObject.Find("PusherK").transform.position;
 		pusherKNP = pusherK.transform.position + Vector3.back * 11f;
+        */
 
 		pusherL = GameObject.Find("PusherL");
 		pusherLOP = GameObject.Find("PusherL").transform.position;
@@ -272,7 +282,7 @@ public class MovingPlatform : MonoBehaviour {
 		//Setting up current position for pushers
 		//========================================================================
 		pusherCP = GameObject.Find("Pusher").transform.position;
-		pusherBCP = GameObject.Find("PusherB").transform.position;
+		//pusherBCP = GameObject.Find("PusherB").transform.position;
 		pusherCCP = GameObject.Find("PusherC").transform.position;
 		pusherDCP = GameObject.Find("PusherD").transform.position;
 		pusherECP = GameObject.Find("PusherE").transform.position;
@@ -281,7 +291,7 @@ public class MovingPlatform : MonoBehaviour {
 		pusherHCP = GameObject.Find("PusherH").transform.position;
 		pusherICP = GameObject.Find("PusherI").transform.position;
 		pusherJCP = GameObject.Find("PusherJ").transform.position;
-		pusherKCP = GameObject.Find("PusherK").transform.position;
+		//pusherKCP = GameObject.Find("PusherK").transform.position;
 		pusherLCP = GameObject.Find("PusherL").transform.position;
 		pusherMCP = GameObject.Find("PusherM").transform.position;
 		pusherNCP = GameObject.Find("PusherN").transform.position;
@@ -325,9 +335,9 @@ public class MovingPlatform : MonoBehaviour {
 			}
 			pusher.transform.position = Vector3.Lerp(pusherCP, pusherOP, Perc / 10);
 		}
-		//========================================================================
+        //========================================================================
 
-
+        /*
 		//PusherB
 		//========================================================================
 		if (changeB == false) {
@@ -352,13 +362,13 @@ public class MovingPlatform : MonoBehaviour {
 				pusherBCurrentLerpTime = 0;
 			}
 			pusherB.transform.position = Vector3.Lerp(pusherBCP, pusherBOP, Perc / 50);
-		}
-		//========================================================================
+		}*/
+        //========================================================================
 
 
-		//Pusher Sequence for 1 second
-		//========================================================================
-		if (changeSeqA == false) {
+        //Pusher Sequence for 1 second
+        //========================================================================
+        if (changeSeqA == false) {
 			SeqACurrentLerpTime += Time.deltaTime;
 
 			float Perc = SeqACurrentLerpTime / seqALerpTime;
@@ -464,7 +474,7 @@ public class MovingPlatform : MonoBehaviour {
 			if (SeqDCurrentLerpTime >= 1 && SeqDCurrentLerpTime <= 2) {
 				pusherJ.transform.position = Vector3.Lerp(pusherJCP, pusherJNP, Perc / 50);
 			} else if (SeqDCurrentLerpTime >= 2 && SeqDCurrentLerpTime <= 3) {
-				pusherK.transform.position = Vector3.Lerp(pusherKCP, pusherKNP, Perc / 50);
+				//pusherK.transform.position = Vector3.Lerp(pusherKCP, pusherKNP, Perc / 50);
 			} else if (SeqDCurrentLerpTime >= 3 && SeqDCurrentLerpTime <= 4) {
 				pusherM.transform.position = Vector3.Lerp(pusherMCP, pusherMNP, Perc / 50);
 			} else if (SeqDCurrentLerpTime >= 4 && SeqDCurrentLerpTime <= 5) {
@@ -487,7 +497,7 @@ public class MovingPlatform : MonoBehaviour {
 				SeqDCurrentLerpTime = 0;
 			}
 			pusherJ.transform.position = Vector3.Lerp(pusherJCP, pusherJOP, Perc / 50);
-			pusherK.transform.position = Vector3.Lerp(pusherKCP, pusherKOP, Perc / 50);
+			//pusherK.transform.position = Vector3.Lerp(pusherKCP, pusherKOP, Perc / 50);
 			pusherL.transform.position = Vector3.Lerp(pusherLCP, pusherLOP, Perc / 50);
 			pusherM.transform.position = Vector3.Lerp(pusherMCP, pusherMOP, Perc / 50);
 			pusherN.transform.position = Vector3.Lerp(pusherNCP, pusherNOP, Perc / 50);
