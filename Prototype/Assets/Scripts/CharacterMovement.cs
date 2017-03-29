@@ -25,6 +25,8 @@ public class CharacterMovement : MonoBehaviour
     // Game
     private Vector3 respawnPoint;
 
+    public int spawnNumber = 0;
+
     // Player
     private CharacterController player;
     public string currentLevel;
@@ -117,7 +119,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         // Game
-        respawnPoint = GameObject.Find("SpawnPoint 3").transform.position;
+        respawnPoint = GameObject.Find("SpawnPoint " + spawnNumber).transform.position;
         currentLevel = SceneManager.GetActiveScene().name;
 
         // Character
