@@ -64,7 +64,7 @@ public class LevelTwoButtonScript : MonoBehaviour {
 	void Update () {
         gateACP = GameObject.Find("GateA").transform.position;
         gateBCP = GameObject.Find("GateB").transform.position;
-        movingPlatformCP = GameObject.Find("movingPlatform").transform.position;
+        //movingPlatformCP = GameObject.Find("movingPlatform").transform.position;
 
 
 

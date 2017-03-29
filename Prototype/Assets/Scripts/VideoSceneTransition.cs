@@ -36,15 +36,15 @@ public class VideoSceneTransition : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if ((!movie.isPlaying && level == null))
+        if ((!movie.isPlaying && level == null) || Input.anyKey)
         {
             Application.LoadLevel("Level 01(medit2)");
         }
 
-        if ((!movie.isPlaying && level == "Level 01(medit2)"))
+        if ((!movie.isPlaying && level == "Level 01(medit2)") || Input.anyKey)
         {
             Application.LoadLevel("Level 02");
-        }else if ((!movie.isPlaying && level == "Level 02"))
+        }else if ((!movie.isPlaying && level == "Level 02") || Input.anyKey)
         {
             Application.LoadLevel("Level_03");
         }
