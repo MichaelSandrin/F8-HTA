@@ -46,7 +46,7 @@ public class SaveLoadGame : MonoBehaviour
         if (Col.gameObject.tag == "Player" && GameObject.Find("Plume").GetComponent<CharacterMovement>().currentLevel != "SaveRoom")
         {
             saveGame();
-        }else
+        }else if(GameObject.Find("Plume").GetComponent<CharacterMovement>().currentLevel == "SaveRoom")
         {
             loadGame();
         }
