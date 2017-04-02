@@ -505,7 +505,7 @@ public class CharacterMovement : MonoBehaviour
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         var animator = gameObject.GetComponent<Animator>();
-
+        
         Rigidbody body = hit.collider.attachedRigidbody;
         // Sets the glide timer to 0 if the player hits a wall.
         if (hit.normal.y != 1 && hit.controller.detectCollisions)
@@ -589,6 +589,7 @@ public class CharacterMovement : MonoBehaviour
     {
         //Debug.Log("Entered Trigger");
         var animator = gameObject.GetComponent<Animator>();
+        
         if (Col.gameObject.tag == "Ladder")
         {
             //interaction();
@@ -600,15 +601,26 @@ public class CharacterMovement : MonoBehaviour
             //currentLerpTime += Time.deltaTime; 
         }
 
+        
+        
+
         if (Col.gameObject.tag == "BoxPush" && ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)))
         {
-            print("Push");
+            
+            //print("Push");
             animator.SetBool("Push", true);
+            
+            
+            
         }
         else if (Col.gameObject.tag != "BoxPush" && ((Input.GetAxisRaw("Horizontal") == 0 || Input.GetAxisRaw("Vertical") == 0)))
         {
+            
             animator.SetBool("Push", false);
+            
+
         }
+
 
 
         if (Col.gameObject.tag == "Exit")
@@ -650,6 +662,9 @@ public class CharacterMovement : MonoBehaviour
     { // What is this?
         return Physics.Raycast(player.transform.position, Vector3.down, distToGrounded, ground);
     }
+
+  
+
 
     // Redundant Code
     /*
