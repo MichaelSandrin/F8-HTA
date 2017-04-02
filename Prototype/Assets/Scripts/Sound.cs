@@ -7,6 +7,7 @@ public class Sound : MonoBehaviour
     private AudioSource audioSource;
     private AudioClip walk;
     public AudioClip au_idle, au_walk, au_jumpLand, au_buttonWall, au_wingFlap;
+    public AudioClip au_boxPush;
 
     void Start()
     {
@@ -45,4 +46,10 @@ public class Sound : MonoBehaviour
         audioSource.PlayOneShot(au_wingFlap);
         audioSource.volume = .3f;
     }
+    void boxPushSound()
+    {
+        audioSource.PlayOneShot(au_boxPush);
+        audioSource.volume = .1f;
+    }
+
 }
