@@ -34,6 +34,16 @@ public static class SaveLoadManager
         }
         return loadLevel;
     }
+
+    public static string delete()
+    {
+        if (File.Exists(Application.persistentDataPath + "/savedGames.txt"))
+        {
+            File.Delete(Application.persistentDataPath + "/savedGames.txt");
+
+        }
+        return null;
+    }
 }
 
 

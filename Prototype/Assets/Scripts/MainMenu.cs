@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour {
+
+    public string level;
     void Start() {
 
     }
@@ -16,6 +18,7 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void StartGame() {
+        level = SaveLoadManager.delete();
         Application.LoadLevel("VideoTransition");
     }
 

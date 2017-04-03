@@ -13,7 +13,7 @@ public class VideoSceneTransition : MonoBehaviour {
     // Use this for initialization
     void Start () {
         level = SaveLoadManager.Load();
-        print(level);
+       
         if (level == null)
         {
             movie = (MovieTexture)Resources.Load("OpeningCutscene26-3-2017", typeof(MovieTexture));
@@ -36,15 +36,15 @@ public class VideoSceneTransition : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if ((!movie.isPlaying && level == null) || Input.anyKey)
+        if ((!movie.isPlaying && level == null) || (Input.anyKey && level == null))
         {
+            print("here");
             Application.LoadLevel("Level 01(medit2)");
-        }
-
-        if ((!movie.isPlaying && level == "Level 01(medit2)") || Input.anyKey)
+        }else if ((!movie.isPlaying && level == "Level 01(medit2)") || (Input.anyKey && level == "Level 01(medit2)"))
         {
+            print("here1");
             Application.LoadLevel("Level 02");
-        }else if ((!movie.isPlaying && level == "Level 02") || Input.anyKey)
+        }else if ((!movie.isPlaying && level == "Level 02") || (Input.anyKey && level == "Level 02"))
         {
             Application.LoadLevel("Level_03");
         }

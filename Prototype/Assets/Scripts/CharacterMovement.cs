@@ -25,8 +25,6 @@ public class CharacterMovement : MonoBehaviour
     // Game
     private Vector3 respawnPoint;
 
-    public int spawnNumber = 0;
-
     // Player
     private CharacterController player;
     public string currentLevel;
@@ -63,6 +61,7 @@ public class CharacterMovement : MonoBehaviour
     private float verticalVelocity = 0f;
     // [~2x Acceleration], Max comfortable jump distance maps ~ 1:1 to jumpSpeed
     public float jumpSpeed;
+    private bool hasJump = true;
     public float playerGravity;
     // 15 = ~>12 high
     public float deathSpeed;
@@ -119,7 +118,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         // Game
-        respawnPoint = GameObject.Find("SpawnPoint " + spawnNumber).transform.position;
+        respawnPoint = GameObject.Find("SpawnPoint 0").transform.position;
         currentLevel = SceneManager.GetActiveScene().name;
 
         // Character
@@ -409,16 +408,16 @@ public class CharacterMovement : MonoBehaviour
 
         var animator = gameObject.GetComponent<Animator>();
 
-
+        print(verticalVelocity);
         if (player.isGrounded)
         {
             verticalVelocity = 0;
-            animator.SetTrigger("GlideEnd");
+            animator.SetBool("Glide", false);
             animator.SetBool("Hop", false);
 
         }
 
-        if (verticalVelocity < 0)
+        if (verticalVelocity < -4.8)
         {
             //verticalVelocity += jumpSpeed;
             animator.SetBool("Hop", true);
@@ -429,12 +428,18 @@ public class CharacterMovement : MonoBehaviour
             verticalVelocity = 0;
         }
 
-        if (Input.GetButton("Jump") && player.isGrounded)
+        if (Input.GetButtonDown("Jump") && player.isGrounded)
         {
+            
+            glideDelayOn = true;
             verticalVelocity += jumpSpeed;
             animator.SetBool("Hop", true);
-            glideDelayOn = true;
+            hasJump = false;
 
+        }
+        if (Input.GetButtonUp("Jump"))
+        {
+            hasJump = true;
         }
 
         //verticalVelocity = player.velocity.y;
@@ -447,11 +452,13 @@ public class CharacterMovement : MonoBehaviour
     void Glide()
     {
         var animator = gameObject.GetComponent<Animator>();
-
+        
         // Reset Glide
         if (player.isGrounded)
         { // When the player touches the ground: reset the glide resource
             glideEndurance = maxGlideEndurance;
+            animator.SetBool("Glide", false);
+            gliding = false;
         }
 
         // Timer
@@ -489,17 +496,19 @@ public class CharacterMovement : MonoBehaviour
             // Apply
             if (Input.GetButton("Jump"))
             {
-                animator.SetTrigger("GlideStart");
+                animator.SetBool("Hop", true);
+                animator.SetBool("Glide", true);
                 gliding = true;
                 verticalVelocity += Mathf.Pow(tempDrag, 1f / 1.3f);
                 glideEndurance -= tempDrag;
             }
-            else gliding = false;
+            //else gliding = false;
+            //animator.SetBool("Glide", false);
         }
 
         if (glideEndurance <= 0)
         {
-            animator.SetTrigger("GlideEnd");
+            animator.SetBool("Glide", false);
         }
     }
 
@@ -539,38 +548,52 @@ public class CharacterMovement : MonoBehaviour
     // Extra Interaction Stuff Below, Not Touching That
     void Climb()
     {
-        // If inside the ladder and pressing foward - climb. Foward overrides backward.
-        if (inside == true && (Input.GetKey("w") || Input.GetAxis("X360_LStickY") < 0))
+        var animator = gameObject.GetComponent<Animator>();
+        if(inside == true)
         {
-            ChController.transform.position += (Vector3.up * climbSpeed) * Time.deltaTime;
+            animator.SetBool("Ladder", true);
+        } else
+        {
+            animator.SetBool("Ladder", false);
         }
-        else if (inside == true && (Input.GetKey("s") || Input.GetAxis("X360_LStickY") > 0))
-        {
-            ChController.transform.position += (Vector3.down * climbSpeed) * Time.deltaTime;
-        }
-        else if (inside == true && (Input.GetKey("d") || Input.GetAxis("X360_LStickY") > 0))
-        {
 
-            ChController.transform.position += (Vector3.forward * climbSpeed) * Time.deltaTime;
-        }
-        else if (inside == true && (Input.GetKey("a") || Input.GetAxis("X360_LStickY") > 0))
+        if (inside == true)
         {
-            ChController.transform.position += (Vector3.back * climbSpeed) * Time.deltaTime;
+            // If inside the ladder and pressing foward - climb. Foward overrides backward.
+            if (Input.GetKey("w") || Input.GetAxis("X360_LStickY") < 0)
+            {
+                ChController.transform.position += (Vector3.up * climbSpeed) * Time.deltaTime;
+                //character going up a ladder
+                player.GetComponent<Animator>().enabled = true;
+                animator.SetBool("LadderDS", true);
+            }
+            else if (Input.GetKey("s") || Input.GetAxis("X360_LStickY") > 0)
+            {
+                ChController.transform.position += (Vector3.down * climbSpeed) * Time.deltaTime;
+                //character going down a ladder
+                player.GetComponent<Animator>().enabled = true;
+                animator.SetBool("LadderDS", false);
+            }
+            else if (!Input.anyKeyDown || Input.GetAxis("X360_LStickY") == 0)
+            {
+                player.GetComponent<Animator>().enabled = false;
+            }
 
-        }
-        else if (Input.GetButton("Jump") && inside == true)
-        {
-            player.enabled = true;
-            inside = false;
-            interact = false;
-            oldVelocity = 0;
-            playerGravity = 0;
-
-
-        }
+            if (Input.GetButton("Jump"))
+            {
+                player.enabled = true;
+                inside = false;
+                interact = false;
+                oldVelocity = 0;
+                playerGravity = 0;
+                player.GetComponent<Animator>().enabled = true;
+                //character jumped off the ladder
+            }
+        } 
         else
         {
             playerGravity = -9.80f;
+            player.GetComponent<Animator>().speed = 1;
         }
     }
 
@@ -598,6 +621,21 @@ public class CharacterMovement : MonoBehaviour
             {
                 player.enabled = false;
                 inside = true;
+                //character gets on the ladder
+            }
+            //currentLerpTime += Time.deltaTime; 
+        }
+
+        if (Col.gameObject.tag == "Button")
+        {
+            //interaction();
+            if (interact == true)
+            {
+                animator.SetBool("ButtonHold", true);
+            }
+            if (interact == false)
+            {
+                animator.SetBool("ButtonHold", false);
             }
             //currentLerpTime += Time.deltaTime; 
         }
@@ -631,8 +669,10 @@ public class CharacterMovement : MonoBehaviour
             inside = false;
             interact = false;
             oldVelocity = 0;
+            animator.SetBool("Ladder", false);
 
         }
+      
         if (Col.gameObject.tag == "BoxPush")
         {
             animator.SetBool("Push", false);

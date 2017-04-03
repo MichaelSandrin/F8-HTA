@@ -133,7 +133,7 @@ public class CameraMovement : MonoBehaviour
             cameraTransform.LookAt(playerTransform.position + offset); //+ offset
         }
 
-        else if (isLookingAtPlayer == true)
+        else if (isLookingAtPlayer == false)
         {
             Vector3 direction = new Vector3(0, 0, distance);
             //Quaternion rotation = Quaternion.Euler(-wantedPosition.y, -wantedPosition.x, 0);
