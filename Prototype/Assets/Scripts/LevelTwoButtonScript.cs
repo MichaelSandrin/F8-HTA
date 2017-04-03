@@ -125,6 +125,7 @@ public class LevelTwoButtonScript : MonoBehaviour {
         if ((Col.tag == "Player" && gameObject.tag == ("ButtonBBridge")) && interact)
         {
             triggerB = true;
+
         }
 
         if ((Col.tag == "BoxPush" && gameObject.tag == ("TriggerA")))
