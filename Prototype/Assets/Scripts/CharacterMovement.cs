@@ -616,11 +616,22 @@ public class CharacterMovement : MonoBehaviour
         var animator = gameObject.GetComponent<Animator>();
         if (Col.gameObject.tag == "Ladder")
         {
+            GameObject ladd = Col.gameObject;
+            Vector3 fuckCSharp;
+            fuckCSharp = transform.position;
+            fuckCSharp.x = ladd.transform.position.x;
+            fuckCSharp.z = ladd.transform.position.z;
+            
+            //Vector3 center = new Vector3(ladd.transform.position.x, 0, ladd.transform.position.z);
             //interaction();
             if (interact == true)
             {
                 player.enabled = false;
                 inside = true;
+                //player.transform.position = new Vector3(center.x, player.transform.position.y, center.z);
+                transform.position = fuckCSharp;
+                transform.rotation = new Quaternion(ladd.transform.rotation.x, ladd.transform.rotation.y, ladd.transform.rotation.z, ladd.transform.rotation.w);
+                //ChController.transform.LookAt(center, Vector3.up);
                 //character gets on the ladder
             }
             //currentLerpTime += Time.deltaTime; 
