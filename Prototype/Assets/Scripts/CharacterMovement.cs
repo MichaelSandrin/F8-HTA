@@ -552,6 +552,7 @@ public class CharacterMovement : MonoBehaviour
         if(inside == true)
         {
             animator.SetBool("Ladder", true);
+
         } else
         {
             animator.SetBool("Ladder", false);
@@ -559,6 +560,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (inside == true)
         {
+            
             // If inside the ladder and pressing foward - climb. Foward overrides backward.
             if (Input.GetKey("w") || Input.GetAxis("X360_LStickY") < 0)
             {
@@ -621,6 +623,7 @@ public class CharacterMovement : MonoBehaviour
             {
                 player.enabled = false;
                 inside = true;
+                //ChController.transform.LookAt(Col.gameObject.transform, Vector3.up);
                 //character gets on the ladder
             }
             //currentLerpTime += Time.deltaTime; 
