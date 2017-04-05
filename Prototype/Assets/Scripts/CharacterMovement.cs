@@ -91,6 +91,7 @@ public class CharacterMovement : MonoBehaviour
     public float climbSpeed;
     private bool inside = false;
     private bool interact = false;
+    public Quaternion ladderRotate;
 
     // Boxes?
     public float pushPower;
@@ -618,9 +619,11 @@ public class CharacterMovement : MonoBehaviour
         {
             GameObject ladd = Col.gameObject;
             Vector3 fuckCSharp;
+            
             fuckCSharp = transform.position;
             fuckCSharp.x = ladd.transform.position.x;
             fuckCSharp.z = ladd.transform.position.z;
+            Vector3 ladderForward = ladd.transform.rotation * Vector3.forward;
             
             //Vector3 center = new Vector3(ladd.transform.position.x, 0, ladd.transform.position.z);
             //interaction();
@@ -629,9 +632,10 @@ public class CharacterMovement : MonoBehaviour
                 player.enabled = false;
                 inside = true;
                 //player.transform.position = new Vector3(center.x, player.transform.position.y, center.z);
-                transform.position = fuckCSharp;
-                transform.rotation = new Quaternion(ladd.transform.rotation.x, ladd.transform.rotation.y, ladd.transform.rotation.z, ladd.transform.rotation.w);
-                //ChController.transform.LookAt(center, Vector3.up);
+                
+                //transform.rotation = new Quaternion(0, ladd.transform.rotation.y, 0, ladd.transform.rotation.w);
+                transform.position = fuckCSharp + (ladderForward * .2f);  
+                ChController.transform.LookAt(fuckCSharp, Vector3.up);
                 //character gets on the ladder
             }
             //currentLerpTime += Time.deltaTime; 
