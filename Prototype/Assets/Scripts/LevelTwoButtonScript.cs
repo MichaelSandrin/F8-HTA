@@ -24,19 +24,22 @@ public class LevelTwoButtonScript : MonoBehaviour {
     public Vector3 movingPlatformNP;
     public Vector3 movingPlatformCP;
 
+    GameObject movingPlatformRL;
+    public Vector3 movingPlatformRLOP;
+    public Vector3 movingPlatformRLRP;
+    public Vector3 movingPlatformRLLP;
+    public Vector3 movingPlatformRLCP;
+
 
     //Boolean for activation
     float distance = 16.5f;
     public bool triggerBridge = false;
     public bool triggerA = false;
     public bool triggerB = false;
-    public bool changeA = false;
-    public bool changeB = false;
-    public bool changeSeqA = false;
-    public bool changeSeqB = false;
-    public bool changeSeqC = false;
-    public bool changeSeqD = false;
-    public bool changePlatform = false;
+    public bool floorTrigger = false;
+    public bool triggerRight = false;
+    public bool triggerLeft = false;
+
 
     public bool interact = false;
 
@@ -60,12 +63,19 @@ public class LevelTwoButtonScript : MonoBehaviour {
         movingPlatformNP = movingPlatform.transform.position + Vector3.back * 7f;
         */
 
+        movingPlatformRL = GameObject.Find("MovingPlatformRL");
+        movingPlatformRLOP = GameObject.Find("MovingPlatformRL").transform.position;
+        movingPlatformRLRP = movingPlatformRL.transform.position + Vector3.left * 30f;
+        movingPlatformRLLP = movingPlatformRL.transform.position + Vector3.right * 15f;
+
     }
 	
 	// Update is called once per frame
 	void Update () {
         gateACP = GameObject.Find("GateA").transform.position;
         gateBCP = GameObject.Find("GateB").transform.position;
+
+        movingPlatformRLCP = GameObject.Find("MovingPlatformRL").transform.position;
         /*
         movingPlatformCP = GameObject.Find("movingPlatform").transform.position;
         */
@@ -89,7 +99,30 @@ public class LevelTwoButtonScript : MonoBehaviour {
             gateA.transform.position = Vector3.Lerp(gateACP, gateANP, Perc / 30);
         }
 
-        if (triggerA)
+        if (triggerRight && interact)
+        {
+            currentLerpTime += Time.deltaTime;
+            if (currentLerpTime >= lerpTime)
+            {
+                currentLerpTime = lerpTime;
+            }
+            float Perc = currentLerpTime / lerpTime;
+            movingPlatformRL.transform.position = Vector3.Lerp(movingPlatformRLCP, movingPlatformRLRP, Perc / 30);
+        }
+
+        if (triggerLeft && interact)
+        {
+            currentLerpTime += Time.deltaTime;
+            if (currentLerpTime >= lerpTime)
+            {
+                currentLerpTime = lerpTime;
+            }
+            float Perc = currentLerpTime / lerpTime;
+            movingPlatformRL.transform.position = Vector3.Lerp(movingPlatformRLCP, movingPlatformRLOP, Perc / 30);
+        }
+
+
+        if (floorTrigger)
         {
             currentLerpTime += Time.deltaTime;
             if (currentLerpTime >= lerpTime)
@@ -122,15 +155,19 @@ public class LevelTwoButtonScript : MonoBehaviour {
             triggerA = true;
         }
 
-        if ((Col.tag == "Player" && gameObject.tag == ("ButtonBBridge")) && interact)
+        if ((Col.tag == "Player" && gameObject.tag == ("TriggerRight")) && interact)
         {
-            triggerB = true;
-
+            triggerRight = true;
         }
 
-        if ((Col.tag == "BoxPush" && gameObject.tag == ("TriggerA")))
+        if ((Col.tag == "Player" && gameObject.tag == ("TriggerLeft")) && interact)
         {
-            triggerA = true;
+            triggerLeft = true;
+        }
+
+        if ((Col.tag == "BoxPush" && gameObject.tag == ("FloorTrigger")))
+        {
+            floorTrigger = true;
         }
 
         if ((Col.tag == "Player" && gameObject.tag == ("TriggerLiftB")) && interact)
@@ -144,6 +181,9 @@ public class LevelTwoButtonScript : MonoBehaviour {
        
         triggerA = false;
         triggerB = false;
+        triggerRight = false;
+        triggerLeft = false;
+
         triggerLiftA = false;
         triggerLiftB = false;
         triggerBridge = false;

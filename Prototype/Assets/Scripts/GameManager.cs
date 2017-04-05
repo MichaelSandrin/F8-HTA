@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	void Start() {
 		continueButton = GameObject.Find("Continue_Button");    
 		CanvasObject = GameObject.Find("PauseCanvas").GetComponent<Canvas>();
-		CanvasObject.GetComponent<Canvas>().enabled = true; //level starts paused to get around no controls on restart
+		CanvasObject.GetComponent<Canvas>().enabled = false; //level starts paused to get around no controls on restart
 	}
 
 	public void TogglePauseMenu() {

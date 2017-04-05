@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -17923,96 +17923,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1762773407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 586837b1ea7348949bc7218cc113c1ce, type: 3}
+  m_Script: {fileID: 11500000, guid: 16c97f9d750b8034f827572d27e213ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLerpTime: 0
-  pusherCurrentLerpTime: 0
-  SeqACurrentLerpTime: 0
-  SeqBCurrentLerpTime: 0
-  SeqCCurrentLerpTime: 0
-  SeqDCurrentLerpTime: 0
-  SeqECurrentLerpTime: 0
-  SeqFCurrentLerpTime: 0
-  plateCurrentLerpTime: 0
-  bridgeOneOP: {x: 0, y: 0, z: 0}
-  bridgeOneNP: {x: 0, y: 0, z: 0}
-  bridgeOneCP: {x: 0, y: 0, z: 0}
-  bridgeTwoOP: {x: 0, y: 0, z: 0}
-  bridgeTwoNP: {x: 0, y: 0, z: 0}
-  bridgeTwoCP: {x: 0, y: 0, z: 0}
-  bridgeThreeOP: {x: 0, y: 0, z: 0}
-  bridgeThreeNP: {x: 0, y: 0, z: 0}
-  bridgeThreeCP: {x: 0, y: 0, z: 0}
-  pusherOP: {x: 0, y: 0, z: 0}
-  pusherNP: {x: 0, y: 0, z: 0}
-  pusherNP2: {x: 0, y: 0, z: 0}
-  pusherCP: {x: 0, y: 0, z: 0}
-  pusherCOP: {x: 0, y: 0, z: 0}
-  pusherCNP: {x: 0, y: 0, z: 0}
-  pusherCNP2: {x: 0, y: 0, z: 0}
-  pusherCCP: {x: 0, y: 0, z: 0}
-  pusherDOP: {x: 0, y: 0, z: 0}
-  pusherDNP: {x: 0, y: 0, z: 0}
-  pusherDNP2: {x: 0, y: 0, z: 0}
-  pusherDCP: {x: 0, y: 0, z: 0}
-  pusherEOP: {x: 0, y: 0, z: 0}
-  pusherENP: {x: 0, y: 0, z: 0}
-  pusherENP2: {x: 0, y: 0, z: 0}
-  pusherECP: {x: 0, y: 0, z: 0}
-  pusherFOP: {x: 0, y: 0, z: 0}
-  pusherFNP: {x: 0, y: 0, z: 0}
-  pusherFNP2: {x: 0, y: 0, z: 0}
-  pusherFCP: {x: 0, y: 0, z: 0}
-  pusherGOP: {x: 0, y: 0, z: 0}
-  pusherGNP: {x: 0, y: 0, z: 0}
-  pusherGNP2: {x: 0, y: 0, z: 0}
-  pusherGCP: {x: 0, y: 0, z: 0}
-  pusherHOP: {x: 0, y: 0, z: 0}
-  pusherHNP: {x: 0, y: 0, z: 0}
-  pusherHNP2: {x: 0, y: 0, z: 0}
-  pusherHCP: {x: 0, y: 0, z: 0}
-  pusherIOP: {x: 0, y: 0, z: 0}
-  pusherINP: {x: 0, y: 0, z: 0}
-  pusherINP2: {x: 0, y: 0, z: 0}
-  pusherICP: {x: 0, y: 0, z: 0}
-  pusherJOP: {x: 0, y: 0, z: 0}
-  pusherJNP: {x: 0, y: 0, z: 0}
-  pusherJNP2: {x: 0, y: 0, z: 0}
-  pusherJCP: {x: 0, y: 0, z: 0}
-  pusherLOP: {x: 0, y: 0, z: 0}
-  pusherLNP: {x: 0, y: 0, z: 0}
-  pusherLNP2: {x: 0, y: 0, z: 0}
-  pusherLCP: {x: 0, y: 0, z: 0}
-  pusherMOP: {x: 0, y: 0, z: 0}
-  pusherMNP: {x: 0, y: 0, z: 0}
-  pusherMNP2: {x: 0, y: 0, z: 0}
-  pusherMCP: {x: 0, y: 0, z: 0}
-  pusherNOP: {x: 0, y: 0, z: 0}
-  pusherNNP: {x: 0, y: 0, z: 0}
-  pusherNNP2: {x: 0, y: 0, z: 0}
-  pusherNCP: {x: 0, y: 0, z: 0}
-  platFormOneOP: {x: 0, y: 0, z: 0}
-  platFormOneNP: {x: 0, y: 0, z: 0}
-  platFormOneNP2: {x: 0, y: 0, z: 0}
-  platFormOneCP: {x: 0, y: 0, z: 0}
-  platFormTwoOP: {x: 0, y: 0, z: 0}
-  platFormTwoNP: {x: 0, y: 0, z: 0}
-  platFormTwoNP2: {x: 0, y: 0, z: 0}
-  platFormTwoCP: {x: 0, y: 0, z: 0}
-  triggerBridge: 0
-  triggerA: 0
-  triggerB: 0
-  changeA: 0
-  changeB: 0
-  changeSeqA: 0
-  changeSeqB: 0
-  changeSeqC: 0
-  changeSeqD: 0
-  changePlatform: 0
-  interact: 1
-  triggerLiftA: 0
-  triggerLiftB: 0
 --- !u!4 &1769762573 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4901903582627934, guid: d5d699a1d18363e45ad35e4821705c27,
@@ -19547,6 +19460,7 @@ GameObject:
   - component: {fileID: 1916358699}
   - component: {fileID: 1916358698}
   - component: {fileID: 1916358697}
+  - component: {fileID: 1916358700}
   m_Layer: 0
   m_Name: Bridge1
   m_TagString: Untagged
@@ -19617,6 +19531,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1916358695}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1916358700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1916358695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bfdd549668f099499e006f9592f79ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attachedButton: {fileID: 1762773407}
+  endPosition: {x: 32, y: -0.5, z: 65}
+  currentLerpTime: 0
 --- !u!1 &1924508720
 GameObject:
   m_ObjectHideFlags: 0
@@ -19885,15 +19813,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1939095160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d83a02276d7471a469325cf30fc02909, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e401a56daedbaf4096b6d24f0dadcbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  au_idle: {fileID: 0}
-  au_walk: {fileID: 8300000, guid: 38bea3e3b4ee0f14f839ca57955e3e1d, type: 3}
-  au_jumpLand: {fileID: 8300000, guid: 077304cbe87641f49961bf90cf5b51ab, type: 3}
-  au_buttonWall: {fileID: 8300000, guid: 2ce8d4d7c27141e4ab622b42f6f059b4, type: 3}
-  au_wingFlap: {fileID: 8300000, guid: d57ce91fd9ff95d45b44a0bfb91411b9, type: 3}
-  au_boxPush: {fileID: 8300000, guid: d49a35bf185365f48aa553028f1764cc, type: 3}
 --- !u!82 &1939095162
 AudioSource:
   m_ObjectHideFlags: 0

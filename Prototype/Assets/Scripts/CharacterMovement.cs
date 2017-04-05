@@ -23,11 +23,13 @@ public class CharacterMovement : MonoBehaviour
     // Move glow wing into character movement
 
     // Game
-    private Vector3 respawnPoint;
+    public Vector3 respawnPoint;
 
     // Player
     private CharacterController player;
     public string currentLevel;
+    public int lives;
+    public bool inTrigger = false;
 
     // Camera
     public Camera playerCamera;
@@ -91,6 +93,7 @@ public class CharacterMovement : MonoBehaviour
     public float climbSpeed;
     private bool inside = false;
     private bool interact = false;
+    public Quaternion ladderRotate;
 
     // Boxes?
     public float pushPower;
@@ -120,6 +123,7 @@ public class CharacterMovement : MonoBehaviour
         // Game
         respawnPoint = GameObject.Find("SpawnPoint 0").transform.position;
         currentLevel = SceneManager.GetActiveScene().name;
+        lives = 3;
 
         // Character
         player = GetComponent<CharacterController>();
@@ -221,9 +225,14 @@ public class CharacterMovement : MonoBehaviour
             landed = false;
         }
 
-        if ((oldVelocity <= -deathSpeed && landed == true) || Input.GetKey("k"))
+        if ((oldVelocity <= -deathSpeed && landed == true) || Input.GetKeyDown("k"))
         {
             player.transform.position = respawnPoint;
+            lives = lives - 1;
+        }
+        else if (lives < 1)
+        {
+            Application.LoadLevel(currentLevel);
         }
 
         wasGrounded = player.isGrounded;
@@ -408,7 +417,7 @@ public class CharacterMovement : MonoBehaviour
 
         var animator = gameObject.GetComponent<Animator>();
 
-        print(verticalVelocity);
+      
         if (player.isGrounded)
         {
             verticalVelocity = 0;
@@ -552,7 +561,6 @@ public class CharacterMovement : MonoBehaviour
         if(inside == true)
         {
             animator.SetBool("Ladder", true);
-
         } else
         {
             animator.SetBool("Ladder", false);
@@ -560,7 +568,6 @@ public class CharacterMovement : MonoBehaviour
 
         if (inside == true)
         {
-            
             // If inside the ladder and pressing foward - climb. Foward overrides backward.
             if (Input.GetKey("w") || Input.GetAxis("X360_LStickY") < 0)
             {
@@ -618,19 +625,34 @@ public class CharacterMovement : MonoBehaviour
         var animator = gameObject.GetComponent<Animator>();
         if (Col.gameObject.tag == "Ladder")
         {
+            GameObject ladd = Col.gameObject;
+            Vector3 fuckCSharp;
+            
+            fuckCSharp = transform.position;
+            fuckCSharp.x = ladd.transform.position.x;
+            fuckCSharp.z = ladd.transform.position.z;
+            Vector3 ladderForward = ladd.transform.rotation * Vector3.forward;
+            
+            //Vector3 center = new Vector3(ladd.transform.position.x, 0, ladd.transform.position.z);
             //interaction();
             if (interact == true)
             {
                 player.enabled = false;
                 inside = true;
-                //ChController.transform.LookAt(Col.gameObject.transform, Vector3.up);
+                //player.transform.position = new Vector3(center.x, player.transform.position.y, center.z);
+                
+                //transform.rotation = new Quaternion(0, ladd.transform.rotation.y, 0, ladd.transform.rotation.w);
+                transform.position = fuckCSharp + (ladderForward * .2f);  
+                ChController.transform.LookAt(fuckCSharp, Vector3.up);
                 //character gets on the ladder
             }
-            //currentLerpTime += Time.deltaTime; 
+            //currentLerpTime += Time.deltaTime;
+            inTrigger = true;
         }
 
         if (Col.gameObject.tag == "Button")
         {
+            inTrigger = true;
             //interaction();
             if (interact == true)
             {
@@ -673,12 +695,17 @@ public class CharacterMovement : MonoBehaviour
             interact = false;
             oldVelocity = 0;
             animator.SetBool("Ladder", false);
-
+            inTrigger = false;
         }
       
         if (Col.gameObject.tag == "BoxPush")
         {
             animator.SetBool("Push", false);
+        }
+
+        if (Col.gameObject.tag == "Button")
+        {
+            inTrigger = false;
         }
         /*
         if (currentLerpTime == lerpTime)
